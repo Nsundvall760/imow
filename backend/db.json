@@ -1,0 +1,22 @@
+{
+  "builds": [
+    {
+      "id": "reL4BzgW8Y",
+      "title": "M4A1",
+      "description": "Budget builds?",
+      "tags": [],
+      "image": "/uploads/5q_JImdwuXWb.png",
+      "category": "Assault Rifles",
+      "createdAt": "2025-07-18T21:01:46.370Z"
+    },
+    {
+      "id": "cllWR-fX1f",
+      "title": "AKM",
+      "description": "budget akm",
+      "tags": [],
+      "image": "/uploads/68hWGKd4VSn_.png",
+      "category": "Assault Rifles",
+      "createdAt": "2025-07-18T20:53:01.005Z"
+    }
+  ]
+}

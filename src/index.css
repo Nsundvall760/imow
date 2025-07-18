@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-800;
+  }
+  
+  body {
+    @apply text-white font-display;
+    background-color: #111111;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0, 255, 136, 0.02) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.01) 0%, transparent 50%);
+    background-attachment: fixed;
+    position: relative;
+    z-index: 0;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.18;
+    background-image: 
+      linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-repeat: repeat;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .cyber-button {
+    @apply relative overflow-hidden bg-transparent border-2 border-neon-blue text-neon-blue px-8 py-3 font-gaming font-bold uppercase tracking-wider transition-all duration-300 hover:bg-neon-blue hover:text-dark-bg hover:shadow-[0_0_20px_rgba(0,212,255,0.5)] active:scale-95;
+  }
+
+  .cyber-button::before {
+    content: '';
+    @apply absolute inset-0 bg-neon-blue opacity-0 transition-opacity duration-300;
+    transform: translateX(-100%);
+  }
+
+  .cyber-button:hover::before {
+    @apply opacity-20;
+    transform: translateX(0);
+  }
+
+  .glow-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-green;
+    text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+  }
+
+  .card-glow {
+    @apply bg-card-bg border border-border-glow rounded-lg backdrop-blur-sm;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+  }
+
+  .card-glow:hover {
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+  }
+
+  .neon-border {
+    @apply border border-neon-blue;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  }
+
+  .neon-border:hover {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  }
+
+  .gradient-bg {
+    background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.7);
+  }
+
+  .backdrop-blur-custom {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+} 

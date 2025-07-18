@@ -1,0 +1,143 @@
+import React, { useState, useEffect } from 'react';
+import { Play, Users, Zap, ArrowRight } from 'lucide-react';
+
+const Hero = () => {
+  const [isLive] = useState(true); // Simulate live status
+  const [viewerCount, setViewerCount] = useState(1247); // Simulate viewer count
+
+  useEffect(() => {
+    // Simulate changing viewer count
+    const interval = setInterval(() => {
+      setViewerCount(prev => prev + Math.floor(Math.random() * 10) - 5);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
+      {/* Background Effects removed */}
+      
+      {/* Floating Elements */}
+      <div className="absolute top-20 left-10 w-2 h-2 bg-neon-blue rounded-full animate-pulse"></div>
+      <div className="absolute top-40 right-20 w-1 h-1 bg-neon-green rounded-full animate-pulse-slow"></div>
+      <div className="absolute bottom-40 left-20 w-3 h-3 bg-neon-purple rounded-full animate-float"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
+          <div className="text-center lg:text-left space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-5xl md:text-7xl font-gaming font-bold">
+                <span className="glow-text">IM0W</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-300 font-display">
+                Professional ABI Player & Twitch Streamer
+              </p>
+              <p className="text-lg text-gray-400 max-w-lg">
+                Dominating the competitive scene with precision, strategy, and unmatched skill. 
+                Join the community and witness gaming excellence.
+              </p>
+            </div>
+
+            {/* Live Status */}
+            {isLive && (
+              <div className="flex items-center justify-center lg:justify-start space-x-4">
+                <div className="flex items-center space-x-2 bg-red-500/20 border border-red-500/50 rounded-full px-4 py-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-red-400 font-medium">LIVE</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-300">
+                  <Users size={16} />
+                  <span>{viewerCount.toLocaleString()} viewers</span>
+                </div>
+              </div>
+            )}
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <button className="cyber-button group">
+                <Play size={20} className="mr-2 group-hover:animate-pulse" />
+                Watch Live
+                <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button className="cyber-button border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg">
+                <Zap size={20} className="mr-2" />
+                Join Discord
+              </button>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 pt-8">
+              <div className="text-center">
+                <div className="text-2xl font-gaming text-neon-blue">50K+</div>
+                <div className="text-sm text-gray-400">Followers</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-gaming text-neon-green">1000+</div>
+                <div className="text-sm text-gray-400">Hours Streamed</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-gaming text-neon-purple">Top 1%</div>
+                <div className="text-sm text-gray-400">ABI Rank</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Content - Twitch Embed */}
+          <div className="relative">
+            <div className="card-glow p-4">
+              <div className="aspect-video bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg overflow-hidden relative">
+                {/* Placeholder for Twitch embed */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center space-y-4">
+                    <div className="w-16 h-16 bg-neon-blue/20 rounded-full flex items-center justify-center mx-auto">
+                      <Play size={32} className="text-neon-blue ml-1" />
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-gaming text-neon-blue">Live Stream</h3>
+                      <p className="text-gray-400">ABI Competitive Matches</p>
+                      {isLive && (
+                        <div className="flex items-center justify-center space-x-2">
+                          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                          <span className="text-red-400 text-sm">LIVE NOW</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Overlay for actual Twitch embed */}
+                <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/50 flex items-center justify-center">
+                  <button className="cyber-button">
+                    <Play size={24} className="mr-2" />
+                    Watch on Twitch
+                  </button>
+                </div>
+              </div>
+              
+              {/* Stream Info */}
+              <div className="mt-4 space-y-2">
+                <h3 className="font-gaming text-lg text-neon-blue">ABI Pro Matches</h3>
+                <p className="text-gray-400 text-sm">Competitive gameplay and strategy breakdowns</p>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Playing ABI</span>
+                  <span className="text-neon-green">Live</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div className="w-6 h-10 border-2 border-neon-blue rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-neon-blue rounded-full mt-2 animate-pulse"></div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero; 
