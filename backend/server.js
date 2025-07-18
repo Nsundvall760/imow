@@ -130,6 +130,14 @@ app.delete('/api/builds/:id', async (req, res) => {
   res.json({ success: true });
 });
 
+const modsFile = path.join(__dirname, 'mods.json');
+function readMods() {
+  return JSON.parse(fs.readFileSync(modsFile, 'utf-8')).mods;
+}
+function writeMods(mods) {
+  fs.writeFileSync(modsFile, JSON.stringify({ mods }, null, 2));
+}
+
 // Simple in-memory session for MVP
 let sessions = {};
 function isAdmin(req) {
@@ -183,14 +191,6 @@ app.delete('/api/mods/:username', (req, res) => {
   writeMods(mods);
   res.json({ success: true });
 });
-
-const modsFile = path.join(__dirname, 'mods.json');
-function readMods() {
-  return JSON.parse(fs.readFileSync(modsFile, 'utf-8')).mods;
-}
-function writeMods(mods) {
-  fs.writeFileSync(modsFile, JSON.stringify({ mods }, null, 2));
-}
 
 // Start server
 app.listen(PORT, () => {
