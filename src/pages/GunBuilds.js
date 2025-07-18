@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import BuildCard from '../components/BuildCard';
+import config from '../config';
 
-const API_URL = 'http://localhost:4000/api/builds';
-const UPLOAD_URL = 'http://localhost:4000/api/builds';
+const API_URL = `${config.API_BASE_URL}${config.API_ENDPOINTS.builds}`;
+const UPLOAD_URL = `${config.API_BASE_URL}${config.API_ENDPOINTS.builds}`;
 
 const CATEGORIES = [
   'Assault Rifles',
@@ -226,7 +227,7 @@ function GunBuilds({ isAdmin, onAdminLogout }) {
                     build={build}
                     onEdit={isAdmin ? openEditModal : undefined}
                     onDelete={isAdmin ? handleDelete : undefined}
-                    onImageClick={b => setModalImage(`http://localhost:4000${b.image}`)}
+                                                  onImageClick={b => setModalImage(`${config.API_BASE_URL}${b.image}`)}
                     deleteLoading={deleteLoading}
                     isAdmin={isAdmin}
                   />
@@ -257,7 +258,7 @@ function GunBuilds({ isAdmin, onAdminLogout }) {
                               build={build}
                               onEdit={isAdmin ? openEditModal : undefined}
                               onDelete={isAdmin ? handleDelete : undefined}
-                              onImageClick={b => setModalImage(`http://localhost:4000${b.image}`)}
+                              onImageClick={b => setModalImage(`${config.API_BASE_URL}${b.image}`)}
                               deleteLoading={deleteLoading}
                               isAdmin={isAdmin}
                             />
@@ -285,7 +286,7 @@ function GunBuilds({ isAdmin, onAdminLogout }) {
               <>
                 <button className="cyber-button mt-6 border-red-500 text-red-500 hover:bg-red-500 hover:text-dark-bg" onClick={() => {
                   // Find the build by image URL
-                  const build = builds.find(b => `http://localhost:4000${b.image}` === modalImage);
+                  const build = builds.find(b => `${config.API_BASE_URL}${b.image}` === modalImage);
                   if (build) handleDelete(build.id);
                   setModalImage(null);
                 }} disabled={deleteLoading}>Delete</button>

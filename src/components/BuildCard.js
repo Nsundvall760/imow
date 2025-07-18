@@ -1,9 +1,10 @@
 import React from 'react';
+import config from '../config';
 
 const BuildCard = ({ build, onEdit, onDelete, onImageClick, deleteLoading, isAdmin }) => (
   <div className="card-glow p-4 flex flex-col hover:scale-105 transition-transform duration-300">
     <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden mb-4 cursor-pointer" onClick={() => onImageClick && onImageClick(build)}>
-      <img src={`http://localhost:4000${build.image}`} alt={build.title} className="w-full h-full object-cover" />
+      <img src={`${config.API_BASE_URL}${build.image}`} alt={build.title} className="w-full h-full object-cover" />
     </div>
     <h3 className="font-gaming text-lg text-neon-blue mb-1">{build.title}</h3>
     <div className="text-gray-400 text-xs mb-2">{new Date(build.createdAt).toLocaleString()}</div>

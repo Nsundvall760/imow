@@ -9,6 +9,7 @@ import Social from './components/Social';
 import Footer from './components/Footer';
 import GunBuilds from './pages/GunBuilds';
 import { createPortal } from 'react-dom';
+import config from './config';
 
 function ModManagerModal({ onClose }) {
   const [mods, setMods] = useState([]);
@@ -28,7 +29,7 @@ function ModManagerModal({ onClose }) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:4000/api/mods', { headers: { 'x-admin-session': 'imow' } });
+      const res = await fetch(`${config.API_BASE_URL}${config.API_ENDPOINTS.mods}`, { headers: { 'x-admin-session': 'imow' } });
       if (!res.ok) throw new Error('Failed to fetch mods');
       const data = await res.json();
       setMods(data);
@@ -43,7 +44,7 @@ function ModManagerModal({ onClose }) {
     setAdding(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:4000/api/mods', {
+      const res = await fetch(`${config.API_BASE_URL}${config.API_ENDPOINTS.mods}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-session': 'imow' },
         body: JSON.stringify({ username: username.trim(), password: password.trim() })
@@ -64,7 +65,7 @@ function ModManagerModal({ onClose }) {
     setRemoving(modUsername);
     setError('');
     try {
-      const res = await fetch(`http://localhost:4000/api/mods/${modUsername}`, {
+      const res = await fetch(`${config.API_BASE_URL}${config.API_ENDPOINTS.mods}/${modUsername}`, {
         method: 'DELETE',
         headers: { 'x-admin-session': 'imow' }
       });
@@ -151,7 +152,7 @@ function App() {
     const username = e.target.username.value.trim();
     const password = e.target.password.value.trim();
     // Try backend login for admin and mods
-    fetch('http://localhost:4000/api/mods/login', {
+    fetch(`${config.API_BASE_URL}${config.API_ENDPOINTS.modsLogin}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })

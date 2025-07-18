@@ -8,10 +8,15 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 // Enable CORS for frontend
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-frontend-domain.onrender.com', 'https://your-frontend-domain.vercel.app'] 
+    : 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
 
 // Serve uploaded images statically
