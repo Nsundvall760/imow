@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 4000;
 // Enable CORS for frontend
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.onrender.com', 'https://your-frontend-domain.vercel.app'] 
+    ? ['https://imow-frontend.onrender.com', 'https://imow-frontend-*.onrender.com'] 
     : 'http://localhost:3000',
   credentials: true
 }));
