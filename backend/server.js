@@ -208,6 +208,53 @@ app.delete('/api/mods/:username', (req, res) => {
   res.json({ success: true });
 });
 
+// Twitch stream data endpoint
+app.get('/api/twitch/stream', async (req, res) => {
+  try {
+    const response = await fetch('https://api.twitch.tv/helix/streams?user_login=imow', {
+      headers: {
+        'Client-ID': 'kimne78kx3ncx6brgo4mv6wki5h1ko',
+        'Authorization': 'Bearer undefined' // This will work for public data
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.data && data.data.length > 0) {
+        const stream = data.data[0];
+        res.json({
+          isLive: true,
+          viewerCount: stream.viewer_count,
+          title: stream.title,
+          gameName: stream.game_name
+        });
+      } else {
+        res.json({
+          isLive: false,
+          viewerCount: 0,
+          title: '',
+          gameName: ''
+        });
+      }
+    } else {
+      res.json({
+        isLive: false,
+        viewerCount: 0,
+        title: '',
+        gameName: ''
+      });
+    }
+  } catch (error) {
+    console.log('Error fetching Twitch data:', error);
+    res.json({
+      isLive: false,
+      viewerCount: 0,
+      title: '',
+      gameName: ''
+    });
+  }
+});
+
 // Test endpoint
 app.get('/', (req, res) => {
   res.json({ message: 'Imow Backend is running!', timestamp: new Date().toISOString() });

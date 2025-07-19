@@ -2,15 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { Play, Users, Zap, ArrowRight } from 'lucide-react';
 
 const Hero = () => {
-  const [isLive] = useState(true); // Simulate live status
-  const [viewerCount, setViewerCount] = useState(1247); // Simulate viewer count
+  const [isLive, setIsLive] = useState(false);
+  const [viewerCount, setViewerCount] = useState(0);
+  const [streamTitle, setStreamTitle] = useState('');
+  const [gameName, setGameName] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  const fetchTwitchData = async () => {
+    try {
+      const response = await fetch('https://imow.onrender.com/api/twitch/stream');
+      
+      if (response.ok) {
+        const data = await response.json();
+        setIsLive(data.isLive);
+        setViewerCount(data.viewerCount);
+        setStreamTitle(data.title);
+        setGameName(data.gameName);
+      } else {
+        // Fallback to offline state
+        setIsLive(false);
+        setViewerCount(0);
+        setStreamTitle('');
+        setGameName('');
+      }
+    } catch (error) {
+      console.log('Error fetching Twitch data:', error);
+      // Keep default offline state if API fails
+      setIsLive(false);
+      setViewerCount(0);
+      setStreamTitle('');
+      setGameName('');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Simulate changing viewer count
-    const interval = setInterval(() => {
-      setViewerCount(prev => prev + Math.floor(Math.random() * 10) - 5);
-    }, 5000);
-
+    fetchTwitchData();
+    
+    // Update every 30 seconds
+    const interval = setInterval(fetchTwitchData, 30000);
+    
     return () => clearInterval(interval);
   }, []);
 
@@ -41,16 +73,25 @@ const Hero = () => {
             </div>
 
             {/* Live Status */}
-            {isLive && (
+            {!loading && (
               <div className="flex items-center justify-center lg:justify-start space-x-4">
-                <div className="flex items-center space-x-2 bg-red-500/20 border border-red-500/50 rounded-full px-4 py-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-red-400 font-medium">LIVE</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-300">
-                  <Users size={16} />
-                  <span>{viewerCount.toLocaleString()} viewers</span>
-                </div>
+                {isLive ? (
+                  <>
+                    <div className="flex items-center space-x-2 bg-red-500/20 border border-red-500/50 rounded-full px-4 py-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                      <span className="text-red-400 font-medium">LIVE</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-300">
+                      <Users size={16} />
+                      <span>{viewerCount.toLocaleString()} viewers</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex items-center space-x-2 bg-gray-500/20 border border-gray-500/50 rounded-full px-4 py-2">
+                    <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                    <span className="text-gray-400 font-medium">OFFLINE</span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -103,11 +144,19 @@ const Hero = () => {
               
               {/* Stream Info */}
               <div className="mt-4 space-y-2">
-                <h3 className="font-gaming text-lg text-neon-blue">ABI Pro Matches</h3>
-                <p className="text-gray-400 text-sm">Competitive gameplay and strategy breakdowns</p>
+                <h3 className="font-gaming text-lg text-neon-blue">
+                  {isLive && streamTitle ? streamTitle : 'ABI Pro Matches'}
+                </h3>
+                <p className="text-gray-400 text-sm">
+                  {isLive && streamTitle ? 'Live now!' : 'Competitive gameplay and strategy breakdowns'}
+                </p>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Playing ABI</span>
-                  <span className="text-neon-green">Live</span>
+                  <span className="text-gray-500">
+                    {isLive && gameName ? `Playing ${gameName}` : 'ABI'}
+                  </span>
+                  <span className={isLive ? "text-neon-green" : "text-gray-500"}>
+                    {isLive ? 'Live' : 'Offline'}
+                  </span>
                 </div>
               </div>
             </div>
