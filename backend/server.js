@@ -30,7 +30,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Setup lowdb
 const dbFile = path.join(__dirname, 'db.json');
 const adapter = new JSONFile(dbFile);
-const db = new Low(adapter, { builds: [], clips: [], mapGuides: [], pcSpecs: {} }); // Set default data here
+const db = new Low(adapter, { builds: [], clips: [], mapGuides: [], pcSpecs: {}, bio: {} }); // Set default data here
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -53,7 +53,7 @@ const upload = multer({ storage });
 // Initialize DB with builds array if not present
 async function initDB() {
   await db.read();
-  db.data ||= { builds: [], clips: [], mapGuides: [], pcSpecs: {} };
+  db.data ||= { builds: [], clips: [], mapGuides: [], pcSpecs: {}, bio: {} };
   await db.write();
 }
 
@@ -445,6 +445,24 @@ app.post('/api/map-guides/:map/loot-route', upload.single('image'), async (req, 
   guide.lootRoutes.push(lootRoute);
   await db.write();
   res.json({ success: true, lootRoutes: guide.lootRoutes });
+});
+
+// --- Bio Endpoints ---
+
+// Get bio data
+app.get('/api/bio', async (req, res) => {
+  await db.read();
+  res.json(db.data.bio || {});
+});
+
+// Update bio data (admin/mod only)
+app.patch('/api/bio', async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) return res.status(401).json({ error: 'Unauthorized' });
+  await db.read();
+  if (!db.data.bio) db.data.bio = {};
+  db.data.bio = { ...db.data.bio, ...req.body };
+  await db.write();
+  res.json(db.data.bio);
 });
 
 // --- PC Specs Endpoints ---
