@@ -130,7 +130,7 @@ const Hero = () => {
               {/* Stream Info */}
               <div className="mt-4 space-y-2">
                 <h3 className="font-gaming text-lg text-neon-blue">
-                  ABI Pro Matches
+                  Twitch.tv/imOw
                 </h3>
                 <p className="text-gray-400 text-sm">
                   {isLive ? 'Live now!' : 'Competitive gameplay and strategy breakdowns'}
