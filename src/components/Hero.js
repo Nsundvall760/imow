@@ -56,13 +56,15 @@ const Hero = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button className="cyber-button group">
-                <Play size={20} className="mr-2 group-hover:animate-pulse" />
+              <a 
+                href="https://www.twitch.tv/imow" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="cyber-button group"
+              >
                 Watch Live
-                <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </button>
+              </a>
               <button className="cyber-button border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg">
-                <Zap size={20} className="mr-2" />
                 Join Discord
               </button>
             </div>

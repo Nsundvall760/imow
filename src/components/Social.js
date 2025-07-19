@@ -210,13 +210,22 @@ const Social = () => {
                 Never miss a stream, tournament, or community event. Get notified about everything Im0w.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="cyber-button">
-                  <MessageCircle size={20} className="mr-2" />
+                <a 
+                  href="https://discord.gg/imow" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="cyber-button"
+                >
                   Join Discord
-                </button>
-                <button className="cyber-button border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg">
+                </a>
+                <a 
+                  href="https://www.twitch.tv/imow" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="cyber-button border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg"
+                >
                   Follow on Twitch
-                </button>
+                </a>
               </div>
             </div>
           </div>
