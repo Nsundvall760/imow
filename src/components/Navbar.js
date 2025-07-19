@@ -66,7 +66,7 @@ const Navbar = ({ onOpenModManager }) => {
   const handleLogout = () => {
     localStorage.removeItem('isAdmin');
     localStorage.removeItem('adminUsername');
-    window.location.reload();
+    window.location.replace(window.location.pathname);
   };
 
   return (
