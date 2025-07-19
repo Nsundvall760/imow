@@ -213,11 +213,28 @@ app.get('/api/twitch/stream', async (req, res) => {
   try {
     console.log('Backend: NEW CODE - Fetching Twitch stream data...');
     
-    // Use a public API service that provides Twitch stream data
+    // First get an access token
+    const tokenResponse = await fetch('https://id.twitch.tv/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'client_id=kimne78kx3ncx6brgo4mv6wki5h1ko&grant_type=client_credentials'
+    });
+
+    if (!tokenResponse.ok) {
+      console.log('Backend: Failed to get access token:', tokenResponse.status);
+      throw new Error('Failed to get access token');
+    }
+
+    const tokenData = await tokenResponse.json();
+    console.log('Backend: Got access token successfully');
+    
+    // Now use the token to get stream data
     const response = await fetch('https://api.twitch.tv/helix/streams?user_login=imow', {
       headers: {
         'Client-ID': 'kimne78kx3ncx6brgo4mv6wki5h1ko',
-        'Authorization': 'Bearer undefined'
+        'Authorization': `Bearer ${tokenData.access_token}`
       }
     });
     
