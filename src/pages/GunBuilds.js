@@ -154,7 +154,6 @@ function GunBuilds({ isAdmin, onAdminLogout }) {
         <div className="card-glow p-10 md:p-16 bg-card-bg/80 backdrop-blur-md rounded-2xl shadow-lg">
           {isAdmin && (
             <div className="flex gap-2 justify-end mb-4">
-              <button className="cyber-button px-4 py-1 text-xs border-red-500 text-red-500 hover:bg-red-500 hover:text-dark-bg" onClick={onAdminLogout}>Logout</button>
               <button className="cyber-button px-4 py-1 text-xs" onClick={() => setShowUpload(v => !v)}>
                 {showUpload ? 'Close Upload' : 'Admin Upload'}
               </button>
