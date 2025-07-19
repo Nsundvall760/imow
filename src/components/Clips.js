@@ -397,13 +397,14 @@ const Clips = () => {
                 Join the community to get notified about new clips, streams, and exclusive content.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="cyber-button">
-                  <ExternalLink size={20} className="mr-2" />
-                  View All Clips
-                </button>
-                <button className="cyber-button border-neon-green text-neon-green hover:bg-neon-green hover:text-dark-bg">
-                  Subscribe to Channel
-                </button>
+                <a
+                  href="https://www.twitch.tv/imow/videos?featured=true&filter=clips&range=all"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cyber-button"
+                >
+                  VIEW ALL CLIPS
+                </a>
               </div>
             </div>
           </div>
