@@ -48,6 +48,8 @@ const Clips = () => {
       const isAdminUser = localStorage.getItem('isAdmin') === 'true';
       const adminUsername = localStorage.getItem('adminUsername');
       
+      console.log('Uploading clip...', { isAdminUser, adminUsername });
+      
       const response = await fetch('https://imow.onrender.com/api/clips', {
         method: 'POST',
         headers: {
@@ -57,12 +59,21 @@ const Clips = () => {
         body: formData
       });
       
+      console.log('Upload response status:', response.status);
+      
       if (response.ok) {
+        const result = await response.json();
+        console.log('Upload successful:', result);
         await fetchClips();
         setShowUploadForm(false);
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Upload failed:', errorData);
+        alert(`Upload failed: ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error uploading clip:', error);
+      alert(`Upload error: ${error.message}`);
     }
   };
 

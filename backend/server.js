@@ -250,12 +250,21 @@ app.get('/api/clips', async (req, res) => {
 
 // Upload a new clip (admin/mod only)
 app.post('/api/clips', upload.single('thumbnail'), async (req, res) => {
+  console.log('Backend: Clip upload request received');
+  console.log('Backend: Headers:', req.headers);
+  console.log('Backend: Body:', req.body);
+  console.log('Backend: File:', req.file);
+  
   if (!isAdmin(req) && !isMod(req)) {
+    console.log('Backend: Unauthorized - not admin or mod');
     return res.status(401).json({ error: 'Unauthorized' });
   }
   
   const { title, description, category, duration, views, likes, twitchUrl } = req.body;
+  console.log('Backend: Extracted fields:', { title, description, category, duration, views, likes, twitchUrl });
+  
   if (!title || !category) {
+    console.log('Backend: Missing required fields');
     return res.status(400).json({ error: 'Missing required fields' });
   }
   
@@ -275,6 +284,7 @@ app.post('/api/clips', upload.single('thumbnail'), async (req, res) => {
   
   db.data.clips.unshift(clip);
   await db.write();
+  console.log('Backend: Clip uploaded successfully:', clip);
   res.json(clip);
 });
 
