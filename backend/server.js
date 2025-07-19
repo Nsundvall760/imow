@@ -211,7 +211,7 @@ app.delete('/api/mods/:username', (req, res) => {
 // Twitch stream data endpoint
 app.get('/api/twitch/stream', async (req, res) => {
   try {
-    console.log('Backend: Fetching Twitch stream data...');
+    console.log('Backend: NEW CODE - Fetching Twitch stream data...');
     
     // Use a public API service that provides Twitch stream data
     const response = await fetch('https://api.twitch.tv/helix/streams?user_login=imow', {
