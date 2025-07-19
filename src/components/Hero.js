@@ -65,7 +65,7 @@ const Hero = () => {
 
             {/* Live Status */}
             {!loading && (
-              <div className="flex items-center justify-center lg:justify-start space-x-4">
+              <div className="flex items-center justify-center lg:justify-start">
                 {isLive ? (
                   <div className="flex items-center space-x-2 bg-red-500/20 border border-red-500/50 rounded-full px-4 py-2">
                     <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
@@ -77,12 +77,6 @@ const Hero = () => {
                     <span className="text-gray-400 font-medium">OFFLINE</span>
                   </div>
                 )}
-                <button 
-                  onClick={fetchTwitchData}
-                  className="text-xs text-gray-400 hover:text-neon-blue border border-gray-600 rounded px-2 py-1 transition-colors duration-200"
-                >
-                  Refresh
-                </button>
               </div>
             )}
 
