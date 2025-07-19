@@ -298,10 +298,7 @@ const Clips = () => {
                     </div>
                   )}
 
-                  {/* Duration Badge */}
-                  <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-sm font-mono">
-                    {clip.duration}
-                  </div>
+
 
 
                 </div>
