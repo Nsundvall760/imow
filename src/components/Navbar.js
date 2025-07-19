@@ -135,7 +135,7 @@ const Navbar = ({ onOpenModManager }) => {
             {!isOpen && (
               <button
                 onClick={() => window.open('https://discord.gg/imow', '_blank')}
-                className="ml-2 px-6 py-2 text-base font-gaming font-bold rounded bg-neon-blue text-dark-bg shadow-lg hover:bg-cyan-400 focus:outline-none focus:ring-0 transition-all duration-200"
+                className="ml-2 px-6 py-2 text-base font-gaming font-bold uppercase border-2 border-neon-blue text-neon-blue bg-transparent rounded transition-all duration-200 hover:bg-neon-blue hover:text-dark-bg focus:outline-none focus:ring-0"
                 style={{ minWidth: 0 }}
               >
                 JOIN COMMUNITY
@@ -188,7 +188,7 @@ const Navbar = ({ onOpenModManager }) => {
             {isOpen && (
               <button
                 onClick={() => window.open('https://discord.gg/imow', '_blank')}
-                className="w-full mt-4 px-6 py-2 text-base font-gaming font-bold rounded bg-neon-blue text-dark-bg shadow-lg hover:bg-cyan-400 focus:outline-none focus:ring-0 transition-all duration-200"
+                className="w-full mt-4 px-6 py-2 text-base font-gaming font-bold uppercase border-2 border-neon-blue text-neon-blue bg-transparent rounded transition-all duration-200 hover:bg-neon-blue hover:text-dark-bg focus:outline-none focus:ring-0"
                 style={{ minWidth: 0 }}
               >
                 JOIN COMMUNITY
