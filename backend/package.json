@@ -2,6 +2,7 @@
   "name": "im0w-gun-builds-backend",
   "version": "1.0.0",
   "main": "server.js",
+  "type": "module",
   "private": true,
   "scripts": {
     "start": "node server.js"

@@ -1,11 +1,15 @@
-const express = require('express');
-const multer = require('multer');
-const cors = require('cors');
-const { Low } = require('lowdb');
-const { JSONFile } = require('lowdb/node');
-const { nanoid } = require('nanoid');
-const path = require('path');
-const fs = require('fs');
+import express from 'express';
+import multer from 'multer';
+import cors from 'cors';
+import { Low } from 'lowdb';
+import { JSONFile } from 'lowdb/node';
+import { nanoid } from 'nanoid';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
