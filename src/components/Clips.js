@@ -68,7 +68,7 @@ const Clips = () => {
   };
 
   const handleDeleteClip = async (clipId) => {
-    if (!confirm('Are you sure you want to delete this clip?')) return;
+    if (!window.confirm('Are you sure you want to delete this clip?')) return;
     
     try {
       const adminSession = localStorage.getItem('adminSession');
