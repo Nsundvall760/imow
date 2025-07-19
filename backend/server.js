@@ -211,17 +211,42 @@ app.delete('/api/mods/:username', (req, res) => {
 // Twitch stream data endpoint
 app.get('/api/twitch/stream', async (req, res) => {
   try {
-    const response = await fetch('https://api.twitch.tv/helix/streams?user_login=imow', {
+    // First, get an access token
+    const tokenResponse = await fetch('https://id.twitch.tv/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'client_id=kimne78kx3ncx6brgo4mv6wki5h1ko&grant_type=client_credentials'
+    });
+
+    if (!tokenResponse.ok) {
+      console.log('Failed to get Twitch token');
+      return res.json({
+        isLive: false,
+        viewerCount: 0,
+        title: '',
+        gameName: ''
+      });
+    }
+
+    const tokenData = await tokenResponse.json();
+    
+    // Now fetch stream data with the token
+    const streamResponse = await fetch('https://api.twitch.tv/helix/streams?user_login=imow', {
       headers: {
         'Client-ID': 'kimne78kx3ncx6brgo4mv6wki5h1ko',
-        'Authorization': 'Bearer undefined' // This will work for public data
+        'Authorization': `Bearer ${tokenData.access_token}`
       }
     });
     
-    if (response.ok) {
-      const data = await response.json();
+    if (streamResponse.ok) {
+      const data = await streamResponse.json();
+      console.log('Twitch API response:', data);
+      
       if (data.data && data.data.length > 0) {
         const stream = data.data[0];
+        console.log('Stream found:', stream);
         res.json({
           isLive: true,
           viewerCount: stream.viewer_count,
@@ -229,6 +254,7 @@ app.get('/api/twitch/stream', async (req, res) => {
           gameName: stream.game_name
         });
       } else {
+        console.log('No stream data found');
         res.json({
           isLive: false,
           viewerCount: 0,
@@ -237,6 +263,7 @@ app.get('/api/twitch/stream', async (req, res) => {
         });
       }
     } else {
+      console.log('Stream API failed:', streamResponse.status);
       res.json({
         isLive: false,
         viewerCount: 0,

@@ -10,15 +10,18 @@ const Hero = () => {
 
   const fetchTwitchData = async () => {
     try {
+      console.log('Fetching Twitch data...');
       const response = await fetch('https://imow.onrender.com/api/twitch/stream');
       
       if (response.ok) {
         const data = await response.json();
+        console.log('Twitch data received:', data);
         setIsLive(data.isLive);
         setViewerCount(data.viewerCount);
         setStreamTitle(data.title);
         setGameName(data.gameName);
       } else {
+        console.log('Twitch API response not ok:', response.status);
         // Fallback to offline state
         setIsLive(false);
         setViewerCount(0);
