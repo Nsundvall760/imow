@@ -248,15 +248,32 @@ app.get('/api/twitch/stream', async (req, res) => {
           /"viewerCount"\s*:\s*(\d+)/,
           /"viewers"\s*:\s*(\d+)/,
           /"viewer_count"\s*:\s*(\d+)/,
-          /"viewersCount"\s*:\s*(\d+)/
+          /"viewersCount"\s*:\s*(\d+)/,
+          /for\s+(\d+)\s+viewers/,
+          /(\d+)\s+viewers/,
+          /"viewerCount"\s*:\s*"(\d+)"/,
+          /"viewers"\s*:\s*"(\d+)"/,
+          /"viewer_count"\s*:\s*"(\d+)"/,
+          /"viewersCount"\s*:\s*"(\d+)"/
         ];
         
         for (const pattern of viewerPatterns) {
           const match = html.match(pattern);
           if (match) {
             viewerCount = parseInt(match[1]);
-            console.log('Backend: Found viewer count:', viewerCount);
+            console.log('Backend: Found viewer count:', viewerCount, 'with pattern:', pattern);
             break;
+          }
+        }
+        
+        // If no viewer count found, try to extract from the page text
+        if (viewerCount === 0) {
+          console.log('Backend: No viewer count found in JSON, searching page text...');
+          // Look for "for X viewers" pattern that appears in the embed
+          const textMatch = html.match(/for\s+(\d+)\s+viewers/i);
+          if (textMatch) {
+            viewerCount = parseInt(textMatch[1]);
+            console.log('Backend: Found viewer count in text:', viewerCount);
           }
         }
         
