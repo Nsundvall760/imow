@@ -95,6 +95,12 @@ const Hero = () => {
                     <span className="text-gray-400 font-medium">OFFLINE</span>
                   </div>
                 )}
+                <button 
+                  onClick={fetchTwitchData}
+                  className="text-xs text-gray-400 hover:text-neon-blue border border-gray-600 rounded px-2 py-1 transition-colors duration-200"
+                >
+                  Refresh
+                </button>
               </div>
             )}
 

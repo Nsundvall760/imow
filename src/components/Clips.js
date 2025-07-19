@@ -13,7 +13,7 @@ const Clips = () => {
       likes: "8.2K",
       duration: "2:34",
       category: "featured",
-      thumbnail: "https://via.placeholder.com/400x225/1a1a1a/00d4ff?text=ABI+Clutch"
+      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300d4ff'%3EABI Clutch%3C/text%3E%3C/svg%3E"
     },
     {
       id: 2,
@@ -23,7 +23,7 @@ const Clips = () => {
       likes: "5.7K",
       duration: "4:12",
       category: "featured",
-      thumbnail: "https://via.placeholder.com/400x225/1a1a1a/00ff88?text=Tournament+Finals"
+      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300ff88'%3ETournament Finals%3C/text%3E%3C/svg%3E"
     },
     {
       id: 3,
@@ -33,7 +33,7 @@ const Clips = () => {
       likes: "3.9K",
       duration: "8:45",
       category: "educational",
-      thumbnail: "https://via.placeholder.com/400x225/1a1a1a/8b5cf6?text=Strategy+Guide"
+      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%238b5cf6'%3EStrategy Guide%3C/text%3E%3C/svg%3E"
     },
     {
       id: 4,
@@ -43,7 +43,7 @@ const Clips = () => {
       likes: "2.8K",
       duration: "3:21",
       category: "community",
-      thumbnail: "https://via.placeholder.com/400x225/1a1a1a/ff6b6b?text=Pro+League+Reaction"
+      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%23ff6b6b'%3EPro League Reaction%3C/text%3E%3C/svg%3E"
     },
     {
       id: 5,
@@ -53,7 +53,7 @@ const Clips = () => {
       likes: "4.5K",
       duration: "6:18",
       category: "educational",
-      thumbnail: "https://via.placeholder.com/400x225/1a1a1a/ffd93d?text=Training+Routine"
+      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%23ffd93d'%3ETraining Routine%3C/text%3E%3C/svg%3E"
     },
     {
       id: 6,
@@ -63,7 +63,7 @@ const Clips = () => {
       likes: "2.1K",
       duration: "12:45",
       category: "community",
-      thumbnail: "https://via.placeholder.com/400x225/1a1a1a/6c5ce7?text=Community+Q&A"
+      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%236c5ce7'%3ECommunity Q%26A%3C/text%3E%3C/svg%3E"
     }
   ];
 

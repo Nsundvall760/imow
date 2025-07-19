@@ -16,7 +16,7 @@ const Blog = () => {
       views: "12.5K",
       tags: ["Pro League", "Tournament", "Announcement"],
       featured: true,
-      image: "https://via.placeholder.com/600x300/1a1a1a/00d4ff?text=Pro+League+Announcement"
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' fill='%2300d4ff'%3EPro League Announcement%3C/text%3E%3C/svg%3E"
     },
     {
       id: 2,
@@ -29,7 +29,7 @@ const Blog = () => {
       views: "8.9K",
       tags: ["Training", "ABI", "Guide"],
       featured: false,
-      image: "https://via.placeholder.com/600x300/1a1a1a/00ff88?text=Training+Routine"
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' fill='%2300ff88'%3ETraining Routine%3C/text%3E%3C/svg%3E"
     },
     {
       id: 3,
@@ -42,7 +42,7 @@ const Blog = () => {
       views: "6.2K",
       tags: ["Tournament", "Community", "Results"],
       featured: false,
-      image: "https://via.placeholder.com/600x300/1a1a1a/8b5cf6?text=Tournament+Results"
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' fill='%238b5cf6'%3ETournament Results%3C/text%3E%3C/svg%3E"
     },
     {
       id: 4,
@@ -55,7 +55,7 @@ const Blog = () => {
       views: "15.3K",
       tags: ["Setup", "Equipment", "2024"],
       featured: false,
-      image: "https://via.placeholder.com/600x300/1a1a1a/ff6b6b?text=Equipment+Setup"
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' fill='%23ff6b6b'%3EEquipment Setup%3C/text%3E%3C/svg%3E"
     },
     {
       id: 5,
@@ -68,7 +68,7 @@ const Blog = () => {
       views: "9.7K",
       tags: ["Schedule", "Streaming", "Update"],
       featured: false,
-      image: "https://via.placeholder.com/600x300/1a1a1a/ffd93d?text=Stream+Schedule"
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' fill='%23ffd93d'%3EStream Schedule%3C/text%3E%3C/svg%3E"
     },
     {
       id: 6,
@@ -81,7 +81,7 @@ const Blog = () => {
       views: "7.8K",
       tags: ["Meta", "Analysis", "ABI"],
       featured: false,
-      image: "https://via.placeholder.com/600x300/1a1a1a/6c5ce7?text=Meta+Analysis"
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300' viewBox='0 0 600 300'%3E%3Crect width='600' height='300' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' fill='%236c5ce7'%3EMeta Analysis%3C/text%3E%3C/svg%3E"
     }
   ];
 
