@@ -90,32 +90,15 @@ const Hero = () => {
           <div className="relative">
             <div className="card-glow p-4">
               <div className="aspect-video bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg overflow-hidden relative">
-                {/* Placeholder for Twitch embed */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center space-y-4">
-                    <div className="w-16 h-16 bg-neon-blue/20 rounded-full flex items-center justify-center mx-auto">
-                      <Play size={32} className="text-neon-blue ml-1" />
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-gaming text-neon-blue">Live Stream</h3>
-                      <p className="text-gray-400">ABI Competitive Matches</p>
-                      {isLive && (
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                          <span className="text-red-400 text-sm">LIVE NOW</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Overlay for actual Twitch embed */}
-                <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/50 flex items-center justify-center">
-                  <button className="cyber-button">
-                    <Play size={24} className="mr-2" />
-                    Watch on Twitch
-                  </button>
-                </div>
+                {/* Twitch Embed */}
+                <iframe 
+                  src="https://player.twitch.tv/?channel=imow&parent=imow-frontend.onrender.com" 
+                  frameBorder="0" 
+                  allowFullScreen={true} 
+                  scrolling="no" 
+                  className="w-full h-full rounded-lg"
+                  title="Im0w Twitch Stream"
+                />
               </div>
               
               {/* Stream Info */}
