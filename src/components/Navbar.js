@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-const Navbar = ({ isAdmin, onOpenModManager }) => {
+const Navbar = ({ onOpenModManager }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
@@ -26,6 +26,8 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
     { name: 'Gun Builds', href: '/gun-builds', isRoute: true },
     { name: 'Contact', href: '#contact' }
   ];
+
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   // Helper to scroll to section after navigation
   const scrollToSection = (href) => {
@@ -130,7 +132,7 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
               href="https://discord.gg/imow"
               target="_blank"
               rel="noopener noreferrer"
-              className="cyber-button"
+              className="cyber-button focus:outline-none focus:ring-0"
             >
               Join Community
             </a>
@@ -182,7 +184,7 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
               href="https://discord.gg/imow"
               target="_blank"
               rel="noopener noreferrer"
-              className="cyber-button w-full mt-4"
+              className="cyber-button w-full mt-4 focus:outline-none focus:ring-0"
             >
               Join Community
             </a>
