@@ -60,6 +60,12 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
     setIsOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('adminUsername');
+    window.location.reload();
+  };
+
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
       scrolled 
@@ -105,6 +111,14 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
                   onClick={onOpenModManager}
                 >
                   Admin
+                </button>
+              )}
+              {isAdmin && (
+                <button
+                  className="text-xs text-red-400 border border-red-400 rounded px-3 py-1 ml-2 transition-colors duration-200 hover:bg-red-500/20"
+                  onClick={handleLogout}
+                >
+                  Logout
                 </button>
               )}
             </div>
@@ -156,6 +170,14 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
                 {item.name}
               </button>
             ))}
+            {isAdmin && (
+              <button
+                className="text-xs text-red-400 border border-red-400 rounded px-3 py-1 mt-2 w-full transition-colors duration-200 hover:bg-red-500/20"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            )}
             <a 
               href="https://discord.gg/imow"
               target="_blank"
