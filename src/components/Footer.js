@@ -18,7 +18,7 @@ const Footer = () => {
     'Content': [
       { name: 'Live Streams', href: '#home' },
       { name: 'Best Clips', href: '#clips' },
-      { name: 'Gun Builds', href: '/gun-builds', isRoute: true },
+      { name: 'Guides', href: '/gun-builds', isRoute: true },
       { name: 'Tournaments', href: '#about' }
     ],
     'Support': [

@@ -23,7 +23,7 @@ const Navbar = ({ onOpenModManager }) => {
     { name: 'Clips', href: '#clips' },
     { name: 'Social', href: '#social' },
     { name: 'PC Specs', href: '#pc-specs' },
-    { name: 'Gun Builds', href: '/gun-builds', isRoute: true }
+    { name: 'Guides', href: '/gun-builds', isRoute: true }
   ];
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';

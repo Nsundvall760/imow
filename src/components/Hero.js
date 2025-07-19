@@ -18,7 +18,7 @@ const Hero = () => {
           <div className="text-center lg:text-left space-y-8">
             <div className="space-y-4">
               <h1 className="text-5xl md:text-7xl font-gaming font-bold">
-                <span className="glow-text">IM0W</span>
+                <span className="glow-text">IMOW</span>
               </h1>
               <p className="text-xl md:text-2xl text-gray-300 font-display">
                 Professional ABI Player & Twitch Streamer
