@@ -126,6 +126,19 @@ const Bio = () => {
             </div>
           </div>
 
+          {/* Major Tournament Achievements */}
+          <div className="card-glow p-10 md:p-16 bg-card-bg/80 backdrop-blur-md rounded-2xl shadow-lg mt-16">
+            <h3 className="text-3xl md:text-4xl font-gaming text-neon-green mb-8">Major Tournament Achievements</h3>
+            <ul className="text-base md:text-lg text-gray-200 space-y-3 font-gaming">
+              <li><span className="text-white">2023 July Worlds China Lan Arena Breakout</span> - <span className="text-neon-blue font-bold">2nd Place</span></li>
+              <li><span className="text-white">2024 Jan Worlds China Lan Arena Breakout</span> - <span className="text-neon-blue font-bold">2nd Place</span></li>
+              <li><span className="text-white">2024 December Week 1 $10,000 Arena Breakout Infinite Future Legends</span> - <span className="text-neon-purple font-bold">3rd Place</span></li>
+              <li><span className="text-white">2024 December Week 2 $10,000 Arena Breakout Infinite Future Legends</span> - <span className="text-neon-blue font-bold">2nd Place</span></li>
+              <li><span className="text-white">2024 December Week 3 $10,000 Arena Breakout Infinite Future Legends</span> - <span className="text-neon-green font-bold">1st Place</span></li>
+              <li><span className="text-white">2024 December Week 4 $10,000 Arena Breakout Infinite Future Legends</span> - <span className="text-neon-blue font-bold">2nd Place</span></li>
+            </ul>
+          </div>
+
           {/* Gaming Philosophy */}
           <div className="card-glow p-8 text-center mb-16">
             <h3 className="text-3xl font-gaming text-neon-purple mb-6">
@@ -160,19 +173,6 @@ const Bio = () => {
                 </p>
               </div>
             </div>
-          </div>
-
-          {/* Major Tournament Achievements */}
-          <div className="card-glow p-10 md:p-16 bg-card-bg/80 backdrop-blur-md rounded-2xl shadow-lg mt-16">
-            <h3 className="text-3xl md:text-4xl font-gaming text-neon-green mb-8">Major Tournament Achievements</h3>
-            <ul className="text-base md:text-lg text-gray-200 space-y-3 font-gaming">
-              <li><span className="text-white">2023 July Worlds China Lan Arena Breakout</span> - <span className="text-neon-blue font-bold">2nd Place</span></li>
-              <li><span className="text-white">2024 Jan Worlds China Lan Arena Breakout</span> - <span className="text-neon-blue font-bold">2nd Place</span></li>
-              <li><span className="text-white">2024 December Week 1 $10,000 Arena Breakout Infinite Future Legends</span> - <span className="text-neon-purple font-bold">3rd Place</span></li>
-              <li><span className="text-white">2024 December Week 2 $10,000 Arena Breakout Infinite Future Legends</span> - <span className="text-neon-blue font-bold">2nd Place</span></li>
-              <li><span className="text-white">2024 December Week 3 $10,000 Arena Breakout Infinite Future Legends</span> - <span className="text-neon-green font-bold">1st Place</span></li>
-              <li><span className="text-white">2024 December Week 4 $10,000 Arena Breakout Infinite Future Legends</span> - <span className="text-neon-blue font-bold">2nd Place</span></li>
-            </ul>
           </div>
         </div>
       </div>

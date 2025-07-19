@@ -240,7 +240,7 @@ function App() {
               {/* <Blog /> */}
             </>
           } />
-          <Route path="/gun-builds" element={<GunBuilds isAdmin={isAdmin} onAdminLogout={handleAdminLogout} />} />
+          <Route path="/gun-builds" element={<GunBuilds isAdmin={isAdmin} adminUsername={adminUsername} onAdminLogout={handleAdminLogout} />} />
         </Routes>
       </main>
       <Footer />

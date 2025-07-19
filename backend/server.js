@@ -30,7 +30,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Setup lowdb
 const dbFile = path.join(__dirname, 'db.json');
 const adapter = new JSONFile(dbFile);
-const db = new Low(adapter, { builds: [] }); // Set default data here
+const db = new Low(adapter, { builds: [], clips: [], mapGuides: [] }); // Set default data here
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -53,7 +53,7 @@ const upload = multer({ storage });
 // Initialize DB with builds array if not present
 async function initDB() {
   await db.read();
-  db.data ||= { builds: [], clips: [] };
+  db.data ||= { builds: [], clips: [], mapGuides: [] };
   await db.write();
 }
 
@@ -385,6 +385,66 @@ app.delete('/api/clips/:id', async (req, res) => {
   db.data.clips.splice(idx, 1);
   await db.write();
   res.json({ success: true });
+});
+
+// --- Map Guides Endpoints ---
+
+// List all map guides
+app.get('/api/map-guides', async (req, res) => {
+  await db.read();
+  res.json(db.data.mapGuides || []);
+});
+
+// Get a single map guide by map name
+app.get('/api/map-guides/:map', async (req, res) => {
+  await db.read();
+  const guide = (db.data.mapGuides || []).find(g => g.map.toLowerCase() === req.params.map.toLowerCase());
+  if (!guide) return res.status(404).json({ error: 'Map guide not found' });
+  res.json(guide);
+});
+
+// Update a map guide (admin/mod only)
+app.patch('/api/map-guides/:map', async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) return res.status(401).json({ error: 'Unauthorized' });
+  await db.read();
+  const guide = (db.data.mapGuides || []).find(g => g.map.toLowerCase() === req.params.map.toLowerCase());
+  if (!guide) return res.status(404).json({ error: 'Map guide not found' });
+  const { kits, tips, lootRoutes } = req.body;
+  if (kits !== undefined) guide.kits = kits;
+  if (tips !== undefined) guide.tips = tips;
+  if (lootRoutes !== undefined) guide.lootRoutes = lootRoutes;
+  await db.write();
+  res.json(guide);
+});
+
+// Upload an image to a map guide (admin/mod only)
+app.post('/api/map-guides/:map/image', upload.single('image'), async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) return res.status(401).json({ error: 'Unauthorized' });
+  await db.read();
+  const guide = (db.data.mapGuides || []).find(g => g.map.toLowerCase() === req.params.map.toLowerCase());
+  if (!guide) return res.status(404).json({ error: 'Map guide not found' });
+  if (!req.file) return res.status(400).json({ error: 'No image uploaded' });
+  const imageUrl = `/uploads/${req.file.filename}`;
+  guide.images.push(imageUrl);
+  await db.write();
+  res.json({ success: true, image: imageUrl });
+});
+
+// Upload a loot route image with title to a map guide (admin/mod only)
+app.post('/api/map-guides/:map/loot-route', upload.single('image'), async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) return res.status(401).json({ error: 'Unauthorized' });
+  await db.read();
+  const guide = (db.data.mapGuides || []).find(g => g.map.toLowerCase() === req.params.map.toLowerCase());
+  if (!guide) return res.status(404).json({ error: 'Map guide not found' });
+  if (!req.file || !req.body.title) return res.status(400).json({ error: 'Missing image or title' });
+  const lootRoute = {
+    title: req.body.title,
+    image: `/uploads/${req.file.filename}`
+  };
+  if (!guide.lootRoutes) guide.lootRoutes = [];
+  guide.lootRoutes.push(lootRoute);
+  await db.write();
+  res.json({ success: true, lootRoutes: guide.lootRoutes });
 });
 
 // Test endpoint

@@ -6,9 +6,9 @@ const PCSpecs = () => {
     title: "GAMING PC",
     icon: Gamepad2,
     specs: [
-      { label: "CPU", value: "AMD Ryzen 9 9950X - 16 Core 4.30GHz, 5.70GHz Turbo", icon: Cpu },
+      { label: "CPU", value: "AMD RYZEN ™ 7 9800X 3D (8-core/16-thread, 104MB cache)", icon: Cpu },
       { label: "Motherboard", value: "MSI MAG B650 TOMAHAWK", icon: MemoryStick },
-      { label: "Memory (RAM)", value: "32GB (2x16GB) DDR5/5200mhz Corsair Vengeance", icon: MemoryStick },
+      { label: "Memory (RAM)", value: "CORSAIR VENGEANCE RGB DDR5 64GB (2x32GB) DDR5 6000MHz CL30", icon: MemoryStick },
       { label: "Graphics Card (GPU)", value: "MSI GeForce RTX™ 4090 - 24GB GDDR6X", icon: Monitor },
       { label: "PSU", value: "Corsair RM850e 850W 80+ Gold", icon: Zap },
       { label: "Primary Storage", value: "2TB Kingston NV3", icon: HardDrive },
@@ -22,7 +22,7 @@ const PCSpecs = () => {
     specs: [
       { label: "CPU", value: "Overclocked Intel® Core™ i9-10920X 12 Core", icon: Cpu },
       { label: "Motherboard", value: "ASUS® ROG STRIX X299-E GAMING II", icon: MemoryStick },
-      { label: "Graphics Card", value: "RTX 4070 8gb", icon: Monitor },
+      { label: "Graphic Card", value: "RTX 4070 8gb", icon: Monitor },
       { label: "Memory (RAM)", value: "32GB Corsair VENGEANCE RGB PRO DDR4 3600MHz", icon: MemoryStick },
       { label: "PSU", value: "CORSAIR 850W RMx SERIES™ MODULAR 80 PLUS® GOLD", icon: Zap },
       { label: "Primary Storage", value: "1TB CORSAIR MP400", icon: HardDrive }
