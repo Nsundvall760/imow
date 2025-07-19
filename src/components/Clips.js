@@ -205,11 +205,6 @@ const Clips = () => {
                       <option value="community">Community</option>
                     </select>
                     <input
-                      name="duration"
-                      placeholder="Duration (e.g., 2:34)"
-                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
-                    />
-                    <input
                       name="views"
                       placeholder="Views (e.g., 125K)"
                       className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
@@ -289,12 +284,6 @@ const Clips = () => {
                       <option value="educational">Educational</option>
                       <option value="community">Community</option>
                     </select>
-                    <input
-                      name="duration"
-                      defaultValue={editingClip.duration}
-                      placeholder="Duration (e.g., 2:34)"
-                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
-                    />
                     <input
                       name="twitchUrl"
                       defaultValue={editingClip.twitchUrl}
