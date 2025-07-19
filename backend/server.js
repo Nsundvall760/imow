@@ -7,6 +7,7 @@ import { nanoid } from 'nanoid';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -389,6 +390,15 @@ app.delete('/api/clips/:id', async (req, res) => {
 // Test endpoint
 app.get('/', (req, res) => {
   res.json({ message: 'Imow Backend is running!', timestamp: new Date().toISOString() });
+});
+
+// Add this at the very end, after all other routes:
+const require = createRequire(import.meta.url);
+
+app.use(express.static(path.join(__dirname, '../public')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // Start server
