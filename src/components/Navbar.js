@@ -76,7 +76,7 @@ const Navbar = ({ onOpenModManager }) => {
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+          {/* Left: Logo */}
           <div className="flex-shrink-0">
             <button 
               onClick={handleLogoClick}
@@ -86,49 +86,51 @@ const Navbar = ({ onOpenModManager }) => {
             </button>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              {navItems.map((item) => item.isRoute ? (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="text-gray-300 hover:text-neon-blue px-3 py-2 text-sm font-medium transition-colors duration-300 hover:text-shadow"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ) : (
-                <button
-                  key={item.name}
-                  onClick={() => handleNavClick(item.href)}
-                  className="text-gray-300 hover:text-neon-blue px-3 py-2 text-sm font-medium transition-colors duration-300 hover:text-shadow"
-                >
-                  {item.name}
-                </button>
-              ))}
-              <div className="flex items-center gap-2 ml-4">
-                {isAdmin && (
-                  <button
-                    className="text-xs text-gray-400 hover:text-neon-blue border border-neon-blue rounded px-3 py-1 transition-colors duration-200"
-                    onClick={onOpenModManager}
+          {/* Middle: Nav links + Admin/Logout */}
+          <div className="flex items-center">
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-8">
+                {navItems.map((item) => item.isRoute ? (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="text-gray-300 hover:text-neon-blue px-3 py-2 text-sm font-medium transition-colors duration-300 hover:text-shadow"
+                    onClick={() => setIsOpen(false)}
                   >
-                    Admin
-                  </button>
-                )}
-                {isAdmin && (
+                    {item.name}
+                  </Link>
+                ) : (
                   <button
-                    className="text-xs text-red-400 border border-red-400 rounded px-3 py-1 transition-colors duration-200 hover:bg-red-500/20"
-                    onClick={handleLogout}
+                    key={item.name}
+                    onClick={() => handleNavClick(item.href)}
+                    className="text-gray-300 hover:text-neon-blue px-3 py-2 text-sm font-medium transition-colors duration-300 hover:text-shadow"
                   >
-                    Logout
+                    {item.name}
                   </button>
-                )}
+                ))}
               </div>
+            </div>
+            <div className="flex items-center gap-2 ml-4">
+              {isAdmin && (
+                <button
+                  className="text-xs text-gray-400 hover:text-neon-blue border border-neon-blue rounded px-3 py-1 transition-colors duration-200"
+                  onClick={onOpenModManager}
+                >
+                  Admin
+                </button>
+              )}
+              {isAdmin && (
+                <button
+                  className="text-xs text-red-400 border border-red-400 rounded px-3 py-1 transition-colors duration-200 hover:bg-red-500/20"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              )}
             </div>
           </div>
 
-          {/* CTA Button */}
+          {/* Right: Join Community */}
           <div className="hidden md:block">
             <a 
               href="https://discord.gg/imow"
