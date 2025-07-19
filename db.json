@@ -1,0 +1,96 @@
+{
+  "builds": [
+    {
+      "id": "irGMgCxUjs",
+      "title": "Akm",
+      "description": "Akm",
+      "tags": [
+        "Akm Akm"
+      ],
+      "image": "/uploads/TmAExwOjIFyo.png",
+      "category": "Assault Rifles",
+      "createdAt": "2025-07-19T19:57:37.736Z"
+    },
+    {
+      "id": "1m7ZW0hu-p",
+      "title": "Akm",
+      "description": "Akm",
+      "tags": [
+        "AKM",
+        "Assault",
+        "Rifle"
+      ],
+      "image": "/uploads/utM_pcR04Og0.png",
+      "category": "Assault Rifles",
+      "createdAt": "2025-07-19T19:56:37.131Z"
+    }
+  ],
+  "mapGuides": [
+    {
+      "map": "Farm",
+      "images": [
+        "/uploads/R9OibLyC3PiV.jpg"
+      ],
+      "kits": [
+        "M4A1 Test",
+        "SG",
+        "Commander",
+        "Tier 5",
+        "30 slot",
+        "Key key key key"
+      ],
+      "tips": [
+        "Check all tables in church, Possible ore spawns out side of containers"
+      ],
+      "lootRoutes": [
+        {
+          "title": "Risky 1",
+          "image": "/uploads/oL4x0sGnp2_R.jpg"
+        }
+      ]
+    },
+    {
+      "map": "Valley",
+      "images": [],
+      "kits": [
+        "M4A1",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test"
+      ],
+      "tips": [
+        "Test 1",
+        "Test2"
+      ],
+      "lootRoutes": [
+        {
+          "title": "Test Map",
+          "image": "/uploads/hq3vRu_CnvPh.jpg"
+        }
+      ]
+    },
+    {
+      "map": "Northridge",
+      "images": [],
+      "kits": [],
+      "tips": [],
+      "lootRoutes": []
+    },
+    {
+      "map": "Armory",
+      "images": [],
+      "kits": [],
+      "tips": [],
+      "lootRoutes": []
+    },
+    {
+      "map": "Tv Station",
+      "images": [],
+      "kits": [],
+      "tips": [],
+      "lootRoutes": []
+    }
+  ]
+}
