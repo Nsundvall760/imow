@@ -132,17 +132,6 @@ const Hero = () => {
                 <h3 className="font-gaming text-lg text-neon-blue">
                   Twitch.tv/imOw
                 </h3>
-                <p className="text-gray-400 text-sm">
-                  {isLive ? 'Live now!' : 'Competitive gameplay and strategy breakdowns'}
-                </p>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">
-                    ABI
-                  </span>
-                  <span className={isLive ? "text-neon-green" : "text-gray-500"}>
-                    {isLive ? 'Live' : 'Offline'}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
