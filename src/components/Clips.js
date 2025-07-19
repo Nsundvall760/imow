@@ -173,7 +173,7 @@ const Clips = () => {
           </div>
 
           {/* Upload Form Modal */}
-          {showUploadForm && (
+          {isAdmin && showUploadForm && (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
               <div className="bg-card-bg rounded-lg p-6 max-w-md w-full">
                 <h3 className="text-xl font-gaming text-neon-blue mb-4">Upload New Clip</h3>
@@ -250,7 +250,7 @@ const Clips = () => {
           )}
 
           {/* Edit Clip Modal */}
-          {editingClip && (
+          {isAdmin && editingClip && (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
               <div className="bg-card-bg rounded-lg p-6 max-w-md w-full">
                 <h3 className="text-xl font-gaming text-neon-blue mb-4">Edit Clip</h3>
