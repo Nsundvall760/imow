@@ -107,22 +107,24 @@ const Navbar = ({ onOpenModManager }) => {
                   {item.name}
                 </button>
               ))}
-              {isAdmin && (
-                <button
-                  className="text-xs text-gray-400 hover:text-neon-blue border border-neon-blue rounded px-3 py-1 ml-4 transition-colors duration-200"
-                  onClick={onOpenModManager}
-                >
-                  Admin
-                </button>
-              )}
-              {isAdmin && (
-                <button
-                  className="text-xs text-red-400 border border-red-400 rounded px-3 py-1 ml-2 transition-colors duration-200 hover:bg-red-500/20"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              )}
+              <div className="flex items-center gap-2 ml-4">
+                {isAdmin && (
+                  <button
+                    className="text-xs text-gray-400 hover:text-neon-blue border border-neon-blue rounded px-3 py-1 transition-colors duration-200"
+                    onClick={onOpenModManager}
+                  >
+                    Admin
+                  </button>
+                )}
+                {isAdmin && (
+                  <button
+                    className="text-xs text-red-400 border border-red-400 rounded px-3 py-1 transition-colors duration-200 hover:bg-red-500/20"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -132,9 +134,10 @@ const Navbar = ({ onOpenModManager }) => {
               href="https://discord.gg/imow"
               target="_blank"
               rel="noopener noreferrer"
-              className="cyber-button focus:outline-none focus:ring-0"
+              className="cyber-button focus:outline-none focus:ring-0 px-6 py-2 text-base font-gaming font-bold"
+              style={{ minWidth: 180 }}
             >
-              Join Community
+              JOIN COMMUNITY
             </a>
           </div>
 
