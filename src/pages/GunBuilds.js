@@ -242,7 +242,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     }
     setMapGuideLoading(true);
     setMapGuideError("");
-    fetch(`/api/map-guides/${encodeURIComponent(activeMapGuide)}`)
+    fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`)
       .then(res => res.ok ? res.json() : Promise.reject("Not found"))
       .then(data => {
         setMapGuideData(data);
@@ -265,7 +265,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     setMapGuideLoading(true);
     setMapGuideError("");
     try {
-      const res = await fetch(`/api/map-guides/${encodeURIComponent(activeMapGuide)}/image`, {
+      const res = await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}/image`, {
         method: 'POST',
         body: fd,
         headers: isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {}
@@ -285,7 +285,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     setEditMapGuideSaving(true);
     setMapGuideError("");
     try {
-      const res = await fetch(`/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
+      const res = await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -335,7 +335,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     setMapGuideData(g => ({ ...g, kits: kitsArr })); // Update UI immediately
     setShowKitsModal(false);
     // Save to backend right away
-    await fetch(`/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
+    await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -359,7 +359,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     setShowTipsModal(false);
     setEditingSection(null);
     // Save to backend right away
-    await fetch(`/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
+    await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -392,7 +392,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     fd.append('title', lootRouteTitle);
     fd.append('image', lootRouteImage);
     try {
-      const res = await fetch(`/api/map-guides/${encodeURIComponent(activeMapGuide)}/loot-route`, {
+      const res = await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}/loot-route`, {
         method: 'POST',
         body: fd,
         headers: isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {}
