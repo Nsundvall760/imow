@@ -52,7 +52,7 @@ const upload = multer({ storage });
 // Initialize DB with builds array if not present
 async function initDB() {
   await db.read();
-  db.data ||= { builds: [] };
+  db.data ||= { builds: [], clips: [] };
   await db.write();
 }
 
@@ -239,6 +239,100 @@ app.get('/api/twitch/stream', async (req, res) => {
       isLive: false
     });
   }
+});
+
+// Clips endpoints
+// List all clips
+app.get('/api/clips', async (req, res) => {
+  await db.read();
+  res.json(db.data.clips || []);
+});
+
+// Upload a new clip (admin/mod only)
+app.post('/api/clips', upload.single('thumbnail'), async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  const { title, description, category, duration, views, likes, twitchUrl } = req.body;
+  if (!title || !category) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  
+  await db.read();
+  const clip = {
+    id: nanoid(10),
+    title,
+    description: description || '',
+    category,
+    duration: duration || '0:00',
+    views: views || '0',
+    likes: likes || '0',
+    twitchUrl: twitchUrl || '',
+    thumbnail: req.file ? `/uploads/${req.file.filename}` : null,
+    createdAt: new Date().toISOString()
+  };
+  
+  db.data.clips.unshift(clip);
+  await db.write();
+  res.json(clip);
+});
+
+// Update an existing clip (admin/mod only)
+app.patch('/api/clips/:id', upload.single('thumbnail'), async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  const { title, description, category, duration, views, likes, twitchUrl } = req.body;
+  await db.read();
+  const clip = db.data.clips.find(c => c.id === req.params.id);
+  if (!clip) {
+    if (req.file) fs.unlinkSync(req.file.path);
+    return res.status(404).json({ error: 'Clip not found' });
+  }
+  
+  if (title !== undefined) clip.title = title;
+  if (description !== undefined) clip.description = description;
+  if (category !== undefined) clip.category = category;
+  if (duration !== undefined) clip.duration = duration;
+  if (views !== undefined) clip.views = views;
+  if (likes !== undefined) clip.likes = likes;
+  if (twitchUrl !== undefined) clip.twitchUrl = twitchUrl;
+  
+  if (req.file) {
+    // Remove old thumbnail if exists
+    if (clip.thumbnail && fs.existsSync(path.join(__dirname, clip.thumbnail))) {
+      fs.unlinkSync(path.join(__dirname, clip.thumbnail));
+    }
+    clip.thumbnail = `/uploads/${req.file.filename}`;
+  }
+  
+  await db.write();
+  res.json(clip);
+});
+
+// Delete a clip (admin/mod only)
+app.delete('/api/clips/:id', async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  await db.read();
+  const idx = db.data.clips.findIndex(c => c.id === req.params.id);
+  if (idx === -1) {
+    return res.status(404).json({ error: 'Clip not found' });
+  }
+  
+  const clip = db.data.clips[idx];
+  // Delete thumbnail if exists
+  if (clip.thumbnail && fs.existsSync(path.join(__dirname, clip.thumbnail))) {
+    fs.unlinkSync(path.join(__dirname, clip.thumbnail));
+  }
+  
+  db.data.clips.splice(idx, 1);
+  await db.write();
+  res.json({ success: true });
 });
 
 // Test endpoint

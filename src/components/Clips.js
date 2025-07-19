@@ -1,79 +1,117 @@
-import React, { useState } from 'react';
-import { Play, Eye, Heart, Share2, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Play, Eye, Heart, Share2, ExternalLink, Plus, Edit, Trash2 } from 'lucide-react';
 
 const Clips = () => {
   const [activeTab, setActiveTab] = useState('featured');
+  const [clips, setClips] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [editingClip, setEditingClip] = useState(null);
 
-  const clips = [
-    {
-      id: 1,
-      title: "Insane ABI 1v4 Clutch",
-      description: "Perfect positioning and precision shots in a high-pressure situation",
-      views: "125K",
-      likes: "8.2K",
-      duration: "2:34",
-      category: "featured",
-      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300d4ff'%3EABI Clutch%3C/text%3E%3C/svg%3E"
-    },
-    {
-      id: 2,
-      title: "Tournament Finals Highlights",
-      description: "Key moments from the championship match that secured victory",
-      views: "89K",
-      likes: "5.7K",
-      duration: "4:12",
-      category: "featured",
-      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300ff88'%3ETournament Finals%3C/text%3E%3C/svg%3E"
-    },
-    {
-      id: 3,
-      title: "Strategy Breakdown: Map Control",
-      description: "In-depth analysis of positioning and team coordination",
-      views: "67K",
-      likes: "3.9K",
-      duration: "8:45",
-      category: "educational",
-      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%238b5cf6'%3EStrategy Guide%3C/text%3E%3C/svg%3E"
-    },
-    {
-      id: 4,
-      title: "Reaction to Pro League Announcement",
-      description: "Genuine excitement and plans for the upcoming season",
-      views: "45K",
-      likes: "2.8K",
-      duration: "3:21",
-      category: "community",
-      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%23ff6b6b'%3EPro League Reaction%3C/text%3E%3C/svg%3E"
-    },
-    {
-      id: 5,
-      title: "Training Routine Revealed",
-      description: "Daily practice methods that keep skills sharp",
-      views: "78K",
-      likes: "4.5K",
-      duration: "6:18",
-      category: "educational",
-      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%23ffd93d'%3ETraining Routine%3C/text%3E%3C/svg%3E"
-    },
-    {
-      id: 6,
-      title: "Community Q&A Session",
-      description: "Answering questions from viewers and sharing insights",
-      views: "34K",
-      likes: "2.1K",
-      duration: "12:45",
-      category: "community",
-      thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%236c5ce7'%3ECommunity Q%26A%3C/text%3E%3C/svg%3E"
+  // Check if user is admin/mod
+  useEffect(() => {
+    const adminSession = localStorage.getItem('adminSession');
+    const modSession = localStorage.getItem('modSession');
+    setIsAdmin(adminSession === 'imow' || modSession);
+  }, []);
+
+  // Fetch clips from backend
+  useEffect(() => {
+    fetchClips();
+  }, []);
+
+  const fetchClips = async () => {
+    try {
+      const response = await fetch('https://imow.onrender.com/api/clips');
+      if (response.ok) {
+        const data = await response.json();
+        setClips(data);
+      }
+    } catch (error) {
+      console.error('Error fetching clips:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const categories = [
-    { id: 'featured', name: 'Featured', count: 2 },
-    { id: 'educational', name: 'Educational', count: 2 },
-    { id: 'community', name: 'Community', count: 2 }
+    { id: 'featured', name: 'Featured', count: clips.filter(c => c.category === 'featured').length },
+    { id: 'educational', name: 'Educational', count: clips.filter(c => c.category === 'educational').length },
+    { id: 'community', name: 'Community', count: clips.filter(c => c.category === 'community').length }
   ];
 
   const filteredClips = clips.filter(clip => activeTab === 'all' || clip.category === activeTab);
+
+  // Admin functions
+  const handleUploadClip = async (formData) => {
+    try {
+      const adminSession = localStorage.getItem('adminSession');
+      const modSession = localStorage.getItem('modSession');
+      
+      const response = await fetch('https://imow.onrender.com/api/clips', {
+        method: 'POST',
+        headers: {
+          'x-admin-session': adminSession || '',
+          'x-mod-session': modSession || ''
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        await fetchClips();
+        setShowUploadForm(false);
+      }
+    } catch (error) {
+      console.error('Error uploading clip:', error);
+    }
+  };
+
+  const handleDeleteClip = async (clipId) => {
+    if (!confirm('Are you sure you want to delete this clip?')) return;
+    
+    try {
+      const adminSession = localStorage.getItem('adminSession');
+      const modSession = localStorage.getItem('modSession');
+      
+      const response = await fetch(`https://imow.onrender.com/api/clips/${clipId}`, {
+        method: 'DELETE',
+        headers: {
+          'x-admin-session': adminSession || '',
+          'x-mod-session': modSession || ''
+        }
+      });
+      
+      if (response.ok) {
+        await fetchClips();
+      }
+    } catch (error) {
+      console.error('Error deleting clip:', error);
+    }
+  };
+
+  const handleEditClip = async (clipId, formData) => {
+    try {
+      const adminSession = localStorage.getItem('adminSession');
+      const modSession = localStorage.getItem('modSession');
+      
+      const response = await fetch(`https://imow.onrender.com/api/clips/${clipId}`, {
+        method: 'PATCH',
+        headers: {
+          'x-admin-session': adminSession || '',
+          'x-mod-session': modSession || ''
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        await fetchClips();
+        setEditingClip(null);
+      }
+    } catch (error) {
+      console.error('Error updating clip:', error);
+    }
+  };
 
   return (
     <section id="clips" className="py-20 relative">
@@ -106,7 +144,97 @@ const Clips = () => {
                 <span className="ml-2 text-sm opacity-75">({category.count})</span>
               </button>
             ))}
+            
+            {/* Upload Button for Admin/Mod */}
+            {isAdmin && (
+              <button
+                onClick={() => setShowUploadForm(true)}
+                className="px-6 py-3 rounded-full font-gaming font-bold bg-neon-green text-dark-bg hover:bg-neon-green/80 transition-all duration-300 flex items-center gap-2"
+              >
+                <Plus size={20} />
+                Upload Clip
+              </button>
+            )}
           </div>
+
+          {/* Upload Form Modal */}
+          {showUploadForm && (
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+              <div className="bg-card-bg rounded-lg p-6 max-w-md w-full">
+                <h3 className="text-xl font-gaming text-neon-blue mb-4">Upload New Clip</h3>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.target);
+                  handleUploadClip(formData);
+                }}>
+                  <div className="space-y-4">
+                    <input
+                      name="title"
+                      placeholder="Clip Title"
+                      required
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <textarea
+                      name="description"
+                      placeholder="Description"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white h-20"
+                    />
+                    <select
+                      name="category"
+                      required
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    >
+                      <option value="">Select Category</option>
+                      <option value="featured">Featured</option>
+                      <option value="educational">Educational</option>
+                      <option value="community">Community</option>
+                    </select>
+                    <input
+                      name="duration"
+                      placeholder="Duration (e.g., 2:34)"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <input
+                      name="views"
+                      placeholder="Views (e.g., 125K)"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <input
+                      name="likes"
+                      placeholder="Likes (e.g., 8.2K)"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <input
+                      name="twitchUrl"
+                      placeholder="Twitch URL (optional)"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <input
+                      type="file"
+                      name="thumbnail"
+                      accept="image/*"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="flex-1 bg-neon-blue text-dark-bg py-2 rounded font-gaming"
+                      >
+                        Upload
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowUploadForm(false)}
+                        className="flex-1 bg-gray-600 text-white py-2 rounded font-gaming"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
 
           {/* Clips Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -115,12 +243,34 @@ const Clips = () => {
                 {/* Thumbnail */}
                 <div className="relative overflow-hidden rounded-t-lg">
                   <img 
-                    src={clip.thumbnail} 
+                    src={clip.thumbnail || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300d4ff'%3E${encodeURIComponent(clip.title)}%3C/text%3E%3C/svg%3E`}
                     alt={clip.title}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   
-
+                  {/* Admin Controls */}
+                  {isAdmin && (
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingClip(clip);
+                        }}
+                        className="w-8 h-8 bg-neon-blue/90 rounded flex items-center justify-center hover:bg-neon-blue"
+                      >
+                        <Edit size={14} className="text-dark-bg" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteClip(clip.id);
+                        }}
+                        className="w-8 h-8 bg-red-500/90 rounded flex items-center justify-center hover:bg-red-500"
+                      >
+                        <Trash2 size={14} className="text-white" />
+                      </button>
+                    </div>
+                  )}
 
                   {/* Duration Badge */}
                   <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-sm font-mono">
