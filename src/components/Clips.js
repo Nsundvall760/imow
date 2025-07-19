@@ -120,13 +120,7 @@ const Clips = () => {
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <button className="cyber-button">
-                      <Play size={24} className="mr-2" />
-                      Watch Clip
-                    </button>
-                  </div>
+
 
                   {/* Duration Badge */}
                   <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-sm font-mono">
