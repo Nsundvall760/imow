@@ -28,6 +28,7 @@ const Navbar = ({ onOpenModManager }) => {
   ];
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const adminUsername = localStorage.getItem('adminUsername');
 
   // Helper to scroll to section after navigation
   const scrollToSection = (href) => {
@@ -111,7 +112,7 @@ const Navbar = ({ onOpenModManager }) => {
               </div>
             </div>
             <div className="flex items-center gap-x-2">
-              {isAdmin && (
+              {isAdmin && adminUsername === 'imow' && (
                 <button
                   className="text-xs text-gray-400 hover:text-neon-blue border border-neon-blue rounded px-3 py-1 transition-colors duration-200"
                   onClick={onOpenModManager}
