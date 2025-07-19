@@ -264,7 +264,11 @@ app.get('/api/twitch/stream', async (req, res) => {
 // List all clips
 app.get('/api/clips', async (req, res) => {
   await db.read();
-  res.json(db.data.clips || []);
+  if (!db.data.clips) {
+    db.data.clips = [];
+    await db.write();
+  }
+  res.json(db.data.clips);
 });
 
 // Upload a new clip (admin/mod only)
@@ -288,6 +292,12 @@ app.post('/api/clips', upload.single('thumbnail'), async (req, res) => {
   }
   
   await db.read();
+  
+  // Ensure clips array exists
+  if (!db.data.clips) {
+    db.data.clips = [];
+  }
+  
   const clip = {
     id: nanoid(10),
     title,
@@ -315,6 +325,12 @@ app.patch('/api/clips/:id', upload.single('thumbnail'), async (req, res) => {
   
   const { title, description, category, duration, views, likes, twitchUrl } = req.body;
   await db.read();
+  
+  // Ensure clips array exists
+  if (!db.data.clips) {
+    db.data.clips = [];
+  }
+  
   const clip = db.data.clips.find(c => c.id === req.params.id);
   if (!clip) {
     if (req.file) fs.unlinkSync(req.file.path);
@@ -348,6 +364,12 @@ app.delete('/api/clips/:id', async (req, res) => {
   }
   
   await db.read();
+  
+  // Ensure clips array exists
+  if (!db.data.clips) {
+    db.data.clips = [];
+  }
+  
   const idx = db.data.clips.findIndex(c => c.id === req.params.id);
   if (idx === -1) {
     return res.status(404).json({ error: 'Clip not found' });
