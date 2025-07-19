@@ -112,12 +112,14 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <button 
-              onClick={() => handleNavClick('#contact')}
+            <a 
+              href="https://discord.gg/imow"
+              target="_blank"
+              rel="noopener noreferrer"
               className="cyber-button"
             >
               Join Community
-            </button>
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -154,12 +156,14 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
                 {item.name}
               </button>
             ))}
-            <button 
-              onClick={() => handleNavClick('#contact')}
+            <a 
+              href="https://discord.gg/imow"
+              target="_blank"
+              rel="noopener noreferrer"
               className="cyber-button w-full mt-4"
             >
               Join Community
-            </button>
+            </a>
           </div>
         </div>
       )}
