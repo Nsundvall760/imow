@@ -4,5 +4,27 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
+  ],
+  "routes": [
+    {
+      "src": "/gun-builds",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/clips",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/social",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/pc-specs",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 } 

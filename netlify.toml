@@ -1,0 +1,24 @@
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/gun-builds"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/clips"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/social"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/pc-specs"
+  to = "/index.html"
+  status = 200 
