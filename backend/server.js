@@ -227,17 +227,60 @@ app.get('/api/twitch/stream', async (req, res) => {
       // Check for live indicators in the HTML
       const isLive = html.includes('"isLiveBroadcast":true') || 
                     html.includes('"isLive":true') ||
-                    html.includes('"broadcastType":"live"');
+                    html.includes('"broadcastType":"live"') ||
+                    html.includes('"broadcastType":"live"') ||
+                    html.includes('"isLive":true');
       
       if (isLive) {
         console.log('Backend: Stream is live!');
-        // Extract viewer count if possible
-        const viewerMatch = html.match(/"viewerCount":(\d+)/);
-        const viewerCount = viewerMatch ? parseInt(viewerMatch[1]) : 0;
         
-        // Extract title if possible
-        const titleMatch = html.match(/"title":"([^"]+)"/);
-        const title = titleMatch ? titleMatch[1] : 'Live Stream';
+        // Try multiple patterns to extract viewer count
+        let viewerCount = 0;
+        const viewerPatterns = [
+          /"viewerCount":(\d+)/,
+          /"viewers":(\d+)/,
+          /"viewer_count":(\d+)/,
+          /"viewersCount":(\d+)/,
+          /"viewerCount":\s*(\d+)/,
+          /"viewers":\s*(\d+)/,
+          /"viewer_count":\s*(\d+)/,
+          /"viewersCount":\s*(\d+)/,
+          /"viewerCount"\s*:\s*(\d+)/,
+          /"viewers"\s*:\s*(\d+)/,
+          /"viewer_count"\s*:\s*(\d+)/,
+          /"viewersCount"\s*:\s*(\d+)/
+        ];
+        
+        for (const pattern of viewerPatterns) {
+          const match = html.match(pattern);
+          if (match) {
+            viewerCount = parseInt(match[1]);
+            console.log('Backend: Found viewer count:', viewerCount);
+            break;
+          }
+        }
+        
+        // Try to extract title
+        let title = 'Live Stream';
+        const titlePatterns = [
+          /"title":"([^"]+)"/,
+          /"title":\s*"([^"]+)"/,
+          /"title"\s*:\s*"([^"]+)"/,
+          /"streamTitle":"([^"]+)"/,
+          /"streamTitle":\s*"([^"]+)"/,
+          /"streamTitle"\s*:\s*"([^"]+)"/
+        ];
+        
+        for (const pattern of titlePatterns) {
+          const match = html.match(pattern);
+          if (match) {
+            title = match[1];
+            console.log('Backend: Found title:', title);
+            break;
+          }
+        }
+        
+        console.log('Backend: Final data - isLive:', true, 'viewerCount:', viewerCount, 'title:', title);
         
         res.json({
           isLive: true,
