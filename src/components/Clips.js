@@ -219,6 +219,9 @@ const Clips = () => {
                       placeholder="Twitch URL (optional)"
                       className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
                     />
+                    <p className="text-xs text-gray-400">
+                      Add Twitch clip URL to make the clip playable (e.g., https://www.twitch.tv/imow/clip/...)
+                    </p>
                     <input
                       type="file"
                       name="thumbnail"
@@ -249,7 +252,11 @@ const Clips = () => {
           {/* Clips Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredClips.map((clip) => (
-              <div key={clip.id} className="card-glow group hover:scale-105 transition-all duration-300">
+              <div 
+                key={clip.id} 
+                className={`card-glow group hover:scale-105 transition-all duration-300 ${clip.twitchUrl ? 'cursor-pointer' : ''}`}
+                onClick={clip.twitchUrl ? () => window.open(clip.twitchUrl, '_blank') : undefined}
+              >
                 {/* Thumbnail */}
                 <div className="relative overflow-hidden rounded-t-lg">
                   <img 
@@ -289,7 +296,18 @@ const Clips = () => {
 
                   {/* Play Button */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-neon-blue/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Play size={24} className="text-dark-bg ml-1" />
+                    {clip.twitchUrl ? (
+                      <a 
+                        href={clip.twitchUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-full h-full"
+                      >
+                        <Play size={24} className="text-dark-bg ml-1" />
+                      </a>
+                    ) : (
+                      <Play size={24} className="text-dark-bg ml-1" />
+                    )}
                   </div>
                 </div>
 
