@@ -89,7 +89,7 @@ const Navbar = ({ onOpenModManager }) => {
           {/* Middle: Nav links + Admin/Logout */}
           <div className="flex items-center">
             <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
+              <div className="flex gap-x-8">
                 {navItems.map((item) => item.isRoute ? (
                   <Link
                     key={item.name}
@@ -110,7 +110,7 @@ const Navbar = ({ onOpenModManager }) => {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-2 ml-4">
+            <div className="flex items-center gap-x-2">
               {isAdmin && (
                 <button
                   className="text-xs text-gray-400 hover:text-neon-blue border border-neon-blue rounded px-3 py-1 transition-colors duration-200"
@@ -131,7 +131,7 @@ const Navbar = ({ onOpenModManager }) => {
           </div>
 
           {/* Right: Join Community */}
-          <div className="hidden md:block">
+          <div className="hidden md:block flex items-center">
             <a 
               href="https://discord.gg/imow"
               target="_blank"
