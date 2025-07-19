@@ -178,7 +178,7 @@ function App() {
           localStorage.setItem('adminUsername', username);
         }
         setShowAdminLogin(false);
-        window.location.reload(); // Force UI refresh after login
+        window.location.replace(window.location.pathname); // Stay on the same page after login
       })
       .catch(err => {
         alert(err.message);
