@@ -155,17 +155,29 @@ function isMod(req) {
 app.post('/api/mods/login', (req, res) => {
   const { username, password } = req.body;
   console.log('MOD LOGIN DEBUG:', { username, password });
+  console.log('ADMIN_PASSWORD:', ADMIN_PASSWORD);
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  
   if (username === 'imow' && password === ADMIN_PASSWORD) {
+    console.log('ADMIN LOGIN SUCCESS');
     return res.json({ role: 'admin', session: 'imow' });
   }
-  const mods = readMods();
-  console.log('MOD LOGIN DEBUG: mods list', mods);
-  const mod = mods.find(m => m.username === username && m.password === password);
-  if (mod) {
-    const session = nanoid(16);
-    sessions[session] = username;
-    return res.json({ role: 'mod', session });
+  
+  try {
+    const mods = readMods();
+    console.log('MOD LOGIN DEBUG: mods list', mods);
+    const mod = mods.find(m => m.username === username && m.password === password);
+    if (mod) {
+      const session = nanoid(16);
+      sessions[session] = username;
+      console.log('MOD LOGIN SUCCESS for:', username);
+      return res.json({ role: 'mod', session });
+    }
+  } catch (error) {
+    console.log('ERROR reading mods:', error);
   }
+  
+  console.log('LOGIN FAILED - Invalid credentials');
   return res.status(401).json({ error: 'Invalid credentials' });
 });
 
@@ -196,7 +208,13 @@ app.delete('/api/mods/:username', (req, res) => {
   res.json({ success: true });
 });
 
+// Test endpoint
+app.get('/', (req, res) => {
+  res.json({ message: 'Imow Backend is running!', timestamp: new Date().toISOString() });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Gun Builds backend running on http://localhost:${PORT}`);
+  console.log(`Admin password: ${ADMIN_PASSWORD}`);
 }); 
