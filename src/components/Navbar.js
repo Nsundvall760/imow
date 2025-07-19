@@ -132,15 +132,15 @@ const Navbar = ({ onOpenModManager }) => {
 
           {/* Right: Join Community */}
           <div className="hidden md:block flex items-center">
-            <a 
-              href="https://discord.gg/imow"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cyber-button focus:outline-none focus:ring-0 px-6 py-2 text-base font-gaming font-bold"
-              style={{ minWidth: 180 }}
-            >
-              JOIN COMMUNITY
-            </a>
+            {!isOpen && (
+              <button
+                onClick={() => window.open('https://discord.gg/imow', '_blank')}
+                className="ml-2 px-6 py-2 text-base font-gaming font-bold rounded bg-neon-blue text-dark-bg shadow-lg hover:bg-cyan-400 focus:outline-none focus:ring-0 transition-all duration-200"
+                style={{ minWidth: 0 }}
+              >
+                JOIN COMMUNITY
+              </button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -185,14 +185,15 @@ const Navbar = ({ onOpenModManager }) => {
                 Logout
               </button>
             )}
-            <a 
-              href="https://discord.gg/imow"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cyber-button w-full mt-4 focus:outline-none focus:ring-0"
-            >
-              Join Community
-            </a>
+            {isOpen && (
+              <button
+                onClick={() => window.open('https://discord.gg/imow', '_blank')}
+                className="w-full mt-4 px-6 py-2 text-base font-gaming font-bold rounded bg-neon-blue text-dark-bg shadow-lg hover:bg-cyan-400 focus:outline-none focus:ring-0 transition-all duration-200"
+                style={{ minWidth: 0 }}
+              >
+                JOIN COMMUNITY
+              </button>
+            )}
           </div>
         </div>
       )}
