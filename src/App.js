@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Bio from './components/Bio';
 import Clips from './components/Clips';
 import Social from './components/Social';
+import PCSpecs from './components/PCSpecs';
 // import Blog from './components/Blog';
 import Footer from './components/Footer';
 import GunBuilds from './pages/GunBuilds';
@@ -234,6 +235,7 @@ function App() {
               <Bio />
               <Clips />
               <Social />
+              <PCSpecs />
               {/* <Blog /> */}
             </>
           } />

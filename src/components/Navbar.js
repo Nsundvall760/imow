@@ -22,6 +22,7 @@ const Navbar = ({ isAdmin, onOpenModManager }) => {
     { name: 'About', href: '#about' },
     { name: 'Clips', href: '#clips' },
     { name: 'Social', href: '#social' },
+    { name: 'PC Specs', href: '#pc-specs' },
     { name: 'Gun Builds', href: '/gun-builds', isRoute: true },
     { name: 'Contact', href: '#contact' }
   ];
