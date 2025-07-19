@@ -211,50 +211,42 @@ app.delete('/api/mods/:username', (req, res) => {
 // Twitch stream data endpoint
 app.get('/api/twitch/stream', async (req, res) => {
   try {
-    // First, get an access token
-    const tokenResponse = await fetch('https://id.twitch.tv/oauth2/token', {
+    console.log('Backend: Fetching Twitch stream data...');
+    
+    // Try using the Twitch GraphQL API which is more reliable for public data
+    const response = await fetch('https://gql.twitch.tv/gql', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'client_id=kimne78kx3ncx6brgo4mv6wki5h1ko&grant_type=client_credentials'
-    });
-
-    if (!tokenResponse.ok) {
-      console.log('Failed to get Twitch token');
-      return res.json({
-        isLive: false,
-        viewerCount: 0,
-        title: '',
-        gameName: ''
-      });
-    }
-
-    const tokenData = await tokenResponse.json();
-    
-    // Now fetch stream data with the token
-    const streamResponse = await fetch('https://api.twitch.tv/helix/streams?user_login=imow', {
-      headers: {
         'Client-ID': 'kimne78kx3ncx6brgo4mv6wki5h1ko',
-        'Authorization': `Bearer ${tokenData.access_token}`
-      }
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([{
+        operationName: 'StreamMetadata',
+        variables: { channelLogin: 'imow' },
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash: '1c719a40e481453e5c48d9bb182d70d82c11c3f4c4b3c2b3b0c8c8c8c8c8c8c8c'
+          }
+        }
+      }])
     });
     
-    if (streamResponse.ok) {
-      const data = await streamResponse.json();
-      console.log('Twitch API response:', data);
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Backend: Twitch GraphQL response:', JSON.stringify(data, null, 2));
       
-      if (data.data && data.data.length > 0) {
-        const stream = data.data[0];
-        console.log('Stream found:', stream);
+      if (data[0]?.data?.user?.stream) {
+        const stream = data[0].data.user.stream;
+        console.log('Backend: Stream found:', stream);
         res.json({
           isLive: true,
-          viewerCount: stream.viewer_count,
-          title: stream.title,
-          gameName: stream.game_name
+          viewerCount: stream.viewersCount || 0,
+          title: stream.title || '',
+          gameName: stream.game?.name || ''
         });
       } else {
-        console.log('No stream data found');
+        console.log('Backend: No stream data found, user might be offline');
         res.json({
           isLive: false,
           viewerCount: 0,
@@ -263,16 +255,81 @@ app.get('/api/twitch/stream', async (req, res) => {
         });
       }
     } else {
-      console.log('Stream API failed:', streamResponse.status);
-      res.json({
-        isLive: false,
-        viewerCount: 0,
-        title: '',
-        gameName: ''
-      });
+      console.log('Backend: GraphQL API failed:', response.status);
+      
+      // Fallback to Helix API with proper authentication
+      try {
+        const tokenResponse = await fetch('https://id.twitch.tv/oauth2/token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 'client_id=kimne78kx3ncx6brgo4mv6wki5h1ko&grant_type=client_credentials'
+        });
+
+        if (tokenResponse.ok) {
+          const tokenData = await tokenResponse.json();
+          console.log('Backend: Got access token');
+          
+          const streamResponse = await fetch('https://api.twitch.tv/helix/streams?user_login=imow', {
+            headers: {
+              'Client-ID': 'kimne78kx3ncx6brgo4mv6wki5h1ko',
+              'Authorization': `Bearer ${tokenData.access_token}`
+            }
+          });
+          
+          if (streamResponse.ok) {
+            const helixData = await streamResponse.json();
+            console.log('Backend: Helix API response:', JSON.stringify(helixData, null, 2));
+            
+            if (helixData.data && helixData.data.length > 0) {
+              const stream = helixData.data[0];
+              console.log('Backend: Stream found via Helix:', stream);
+              res.json({
+                isLive: true,
+                viewerCount: stream.viewer_count,
+                title: stream.title,
+                gameName: stream.game_name
+              });
+            } else {
+              console.log('Backend: No stream data found via Helix');
+              res.json({
+                isLive: false,
+                viewerCount: 0,
+                title: '',
+                gameName: ''
+              });
+            }
+          } else {
+            console.log('Backend: Helix API failed:', streamResponse.status);
+            res.json({
+              isLive: false,
+              viewerCount: 0,
+              title: '',
+              gameName: ''
+            });
+          }
+        } else {
+          console.log('Backend: Failed to get access token');
+          res.json({
+            isLive: false,
+            viewerCount: 0,
+            title: '',
+            gameName: ''
+          });
+        }
+      } catch (fallbackError) {
+        console.log('Backend: Fallback API also failed:', fallbackError);
+        res.json({
+          isLive: false,
+          viewerCount: 0,
+          title: '',
+          gameName: ''
+        });
+      }
     }
   } catch (error) {
-    console.log('Error fetching Twitch data:', error);
+    console.log('Backend: Error fetching Twitch data:', error);
     res.json({
       isLive: false,
       viewerCount: 0,
