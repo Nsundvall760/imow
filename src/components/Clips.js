@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Share2, ExternalLink, Plus, Edit, Trash2 } from 'lucide-react';
+import config from '../config';
 
 const Clips = () => {
   const [activeTab, setActiveTab] = useState('featured');
@@ -331,7 +332,7 @@ const Clips = () => {
                     />
                   ) : (
                     <img 
-                      src={clip.thumbnail || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300d4ff'%3E${encodeURIComponent(clip.title)}%3C/text%3E%3C/svg%3E`}
+                      src={clip.thumbnail ? `${config.API_BASE_URL}${clip.thumbnail}` : `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300d4ff'%3E${encodeURIComponent(clip.title)}%3C/text%3E%3C/svg%3E`}
                       alt={clip.title}
                       className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                     />

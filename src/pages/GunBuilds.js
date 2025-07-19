@@ -608,7 +608,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                       </div>
                       <div className="flex flex-wrap gap-4 mb-2">
                         {mapGuideData.images.map((img, i) => (
-                          <img key={i} src={img} alt="Map Guide" className="w-40 h-32 object-cover rounded border border-neon-blue" />
+                          <img key={i} src={`${config.API_BASE_URL}${img}`} alt="Map Guide" className="w-40 h-32 object-cover rounded border border-neon-blue" />
                         ))}
                       </div>
                       {isAdmin && adminUsername && adminUsername !== '' && editingSection === 'images' && (
@@ -666,7 +666,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                           <button
                             key={route.title}
                             className="border-2 border-neon-blue text-neon-blue bg-transparent px-2 py-1 rounded font-gaming tracking-widest font-bold text-sm mr-2 mb-2"
-                            onClick={() => setModalImage(route.image)}
+                            onClick={() => setModalImage(`${config.API_BASE_URL}${route.image}`)}
                           >
                             {route.title}
                           </button>
