@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Users, Zap, ArrowRight } from 'lucide-react';
+import { Play, Zap, ArrowRight } from 'lucide-react';
 
 const Hero = () => {
   const [isLive, setIsLive] = useState(false);
-  const [viewerCount, setViewerCount] = useState(0);
-  const [streamTitle, setStreamTitle] = useState('');
-  const [gameName, setGameName] = useState('');
   const [loading, setLoading] = useState(true);
 
   const fetchTwitchData = async () => {
@@ -17,24 +14,15 @@ const Hero = () => {
         const data = await response.json();
         console.log('Twitch data received:', data);
         setIsLive(data.isLive);
-        setViewerCount(data.viewerCount);
-        setStreamTitle(data.title);
-        setGameName(data.gameName);
       } else {
         console.log('Twitch API response not ok:', response.status);
         // Fallback to offline state
         setIsLive(false);
-        setViewerCount(0);
-        setStreamTitle('');
-        setGameName('');
       }
     } catch (error) {
       console.log('Error fetching Twitch data:', error);
       // Keep default offline state if API fails
       setIsLive(false);
-      setViewerCount(0);
-      setStreamTitle('');
-      setGameName('');
     } finally {
       setLoading(false);
     }
@@ -79,16 +67,10 @@ const Hero = () => {
             {!loading && (
               <div className="flex items-center justify-center lg:justify-start space-x-4">
                 {isLive ? (
-                  <>
-                    <div className="flex items-center space-x-2 bg-red-500/20 border border-red-500/50 rounded-full px-4 py-2">
-                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                      <span className="text-red-400 font-medium">LIVE</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-gray-300">
-                      <Users size={16} />
-                      <span>{viewerCount.toLocaleString()} viewers</span>
-                    </div>
-                  </>
+                  <div className="flex items-center space-x-2 bg-red-500/20 border border-red-500/50 rounded-full px-4 py-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    <span className="text-red-400 font-medium">LIVE</span>
+                  </div>
                 ) : (
                   <div className="flex items-center space-x-2 bg-gray-500/20 border border-gray-500/50 rounded-full px-4 py-2">
                     <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
@@ -154,14 +136,14 @@ const Hero = () => {
               {/* Stream Info */}
               <div className="mt-4 space-y-2">
                 <h3 className="font-gaming text-lg text-neon-blue">
-                  {isLive && streamTitle ? streamTitle : 'ABI Pro Matches'}
+                  ABI Pro Matches
                 </h3>
                 <p className="text-gray-400 text-sm">
-                  {isLive && streamTitle ? 'Live now!' : 'Competitive gameplay and strategy breakdowns'}
+                  {isLive ? 'Live now!' : 'Competitive gameplay and strategy breakdowns'}
                 </p>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-500">
-                    {isLive && gameName ? `Playing ${gameName}` : 'ABI'}
+                    ABI
                   </span>
                   <span className={isLive ? "text-neon-green" : "text-gray-500"}>
                     {isLive ? 'Live' : 'Offline'}

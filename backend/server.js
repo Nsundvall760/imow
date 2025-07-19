@@ -211,55 +211,39 @@ app.delete('/api/mods/:username', (req, res) => {
 // Twitch stream data endpoint
 app.get('/api/twitch/stream', async (req, res) => {
   try {
-    console.log('Backend: NEW CODE - Fetching Twitch stream data...');
+    console.log('Backend: Checking if stream is live...');
     
-    // Try to scrape the Twitch page directly for stream info
-    console.log('Backend: Scraping Twitch page for stream data...');
+    // Simple check: try to fetch the Twitch page
     const pageResponse = await fetch('https://www.twitch.tv/im0w', {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       }
     });
     
     if (pageResponse.ok) {
       const pageHtml = await pageResponse.text();
-      console.log('Backend: Successfully fetched Twitch page');
       
-      // Look for viewer count in the HTML
-      const viewerMatch = pageHtml.match(/"viewerCount":(\d+)/);
-      const titleMatch = pageHtml.match(/"title":"([^"]+)"/);
-      const gameMatch = pageHtml.match(/"gameName":"([^"]+)"/);
+      // Check if page contains live stream indicators
+      const isLive = pageHtml.includes('"isLive":true') || 
+                    pageHtml.includes('"live":true') ||
+                    pageHtml.includes('"streaming":true') ||
+                    pageHtml.includes('"viewerCount"');
       
-      if (viewerMatch || titleMatch || gameMatch) {
-        console.log('Backend: Found stream data in page HTML');
-        res.json({
-          isLive: true,
-          viewerCount: viewerMatch ? parseInt(viewerMatch[1]) : 250,
-          title: titleMatch ? titleMatch[1] : '[DROPS ON] SLEEPING SUBATHON DAY 14',
-          gameName: gameMatch ? gameMatch[1] : 'Arena Breakout: Infinite'
-        });
-        return;
-      }
+      console.log('Backend: Stream status check complete, isLive:', isLive);
+      
+      res.json({
+        isLive: isLive
+      });
+    } else {
+      console.log('Backend: Could not fetch Twitch page, assuming offline');
+      res.json({
+        isLive: false
+      });
     }
-    
-    // Fallback: Since we know the embed shows live, return a reasonable estimate
-    console.log('Backend: Using fallback data since embed shows live');
-    res.json({
-      isLive: true,
-      viewerCount: 250, // Reasonable estimate based on embed
-      title: '[DROPS ON] SLEEPING SUBATHON DAY 14',
-      gameName: 'Arena Breakout: Infinite'
-    });
   } catch (error) {
-    console.log('Backend: Error fetching Twitch data:', error);
-    
-    // Fallback: Since we know the embed shows live, return a reasonable estimate
-    console.log('Backend: Using fallback data due to error');
+    console.log('Backend: Error checking stream status:', error);
     res.json({
-      isLive: true,
-      viewerCount: 250, // Reasonable estimate based on embed
-      title: '[DROPS ON] SLEEPING SUBATHON DAY 14',
-      gameName: 'Arena Breakout: Infinite'
+      isLive: false
     });
   }
 });
