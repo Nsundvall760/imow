@@ -1,8 +1,9 @@
-import React from 'react';
-import { Cpu, Monitor, HardDrive, MemoryStick, Zap, Gamepad2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Cpu, Monitor, HardDrive, MemoryStick, Zap, Gamepad2, Edit, Save, X } from 'lucide-react';
+import config from '../config';
 
 const PCSpecs = () => {
-  const gamingPC = {
+  const [gamingPC, setGamingPC] = useState({
     title: "GAMING PC",
     icon: Gamepad2,
     specs: [
@@ -14,9 +15,9 @@ const PCSpecs = () => {
       { label: "Primary Storage", value: "2TB Kingston NV3", icon: HardDrive },
       { label: "Monitor", value: "LG 27GS95QE 27-inch Ultragear OLED Gaming Monitor QHD 240Hz", icon: Monitor }
     ]
-  };
+  });
 
-  const streamingPC = {
+  const [streamingPC, setStreamingPC] = useState({
     title: "STREAMING PC",
     icon: Monitor,
     specs: [
@@ -27,7 +28,113 @@ const PCSpecs = () => {
       { label: "PSU", value: "CORSAIR 850W RMx SERIES™ MODULAR 80 PLUS® GOLD", icon: Zap },
       { label: "Primary Storage", value: "1TB CORSAIR MP400", icon: HardDrive }
     ]
+  });
+
+  const [editingSpec, setEditingSpec] = useState(null);
+  const [editForm, setEditForm] = useState({ label: '', value: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const adminUsername = localStorage.getItem('adminUsername');
+
+  // Load PC specs from backend
+  useEffect(() => {
+    fetchPCSpecs();
+  }, []);
+
+  const fetchPCSpecs = async () => {
+    try {
+      const response = await fetch(`${config.API_BASE_URL}/api/pc-specs`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.gamingPC) setGamingPC(data.gamingPC);
+        if (data.streamingPC) setStreamingPC(data.streamingPC);
+      }
+    } catch (error) {
+      console.error('Error fetching PC specs:', error);
+    }
   };
+
+  const handleEdit = (pcType, specIndex) => {
+    const pc = pcType === 'gaming' ? gamingPC : streamingPC;
+    const spec = pc.specs[specIndex];
+    setEditingSpec({ pcType, specIndex });
+    setEditForm({ label: spec.label, value: spec.value });
+    setError('');
+  };
+
+  const handleSave = async () => {
+    if (!editingSpec) return;
+    
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const { pcType, specIndex } = editingSpec;
+      const pc = pcType === 'gaming' ? gamingPC : streamingPC;
+      const updatedSpecs = [...pc.specs];
+      updatedSpecs[specIndex] = { ...updatedSpecs[specIndex], ...editForm };
+      
+      const updatedPC = { ...pc, specs: updatedSpecs };
+      
+      const response = await fetch(`${config.API_BASE_URL}/api/pc-specs/${pcType}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
+        },
+        body: JSON.stringify(updatedPC)
+      });
+      
+      if (response.ok) {
+        if (pcType === 'gaming') {
+          setGamingPC(updatedPC);
+        } else {
+          setStreamingPC(updatedPC);
+        }
+        setEditingSpec(null);
+        setEditForm({ label: '', value: '' });
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Failed to save changes');
+      }
+    } catch (error) {
+      setError('Failed to save changes');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingSpec(null);
+    setEditForm({ label: '', value: '' });
+    setError('');
+  };
+
+  const renderSpec = (spec, index, pcType, colorClass) => (
+    <div key={index} className="flex items-start space-x-4 group hover:scale-105 transition-transform duration-300">
+      <div className={`p-3 rounded-lg bg-gray-800/50 group-hover:bg-gray-700/50 transition-colors duration-300`}>
+        <spec.icon size={24} className={colorClass} />
+      </div>
+      <div className="flex-1">
+        <h4 className="text-lg font-gaming font-bold text-white mb-1">
+          {spec.label}
+        </h4>
+        <p className="text-gray-300 leading-relaxed">
+          {spec.value}
+        </p>
+      </div>
+      {isAdmin && (
+        <button
+          onClick={() => handleEdit(pcType, index)}
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 text-gray-400 hover:text-neon-blue"
+        >
+          <Edit size={16} />
+        </button>
+      )}
+    </div>
+  );
 
   return (
     <section id="pc-specs" className="py-20 relative">
@@ -52,21 +159,9 @@ const PCSpecs = () => {
             </div>
             
             <div className="space-y-6">
-              {gamingPC.specs.map((spec, index) => (
-                <div key={index} className="flex items-start space-x-4 group hover:scale-105 transition-transform duration-300">
-                  <div className="p-3 rounded-lg bg-gray-800/50 group-hover:bg-gray-700/50 transition-colors duration-300">
-                    <spec.icon size={24} className="text-neon-blue" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-lg font-gaming font-bold text-white mb-1">
-                      {spec.label}
-                    </h4>
-                    <p className="text-gray-300 leading-relaxed">
-                      {spec.value}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              {gamingPC.specs.map((spec, index) => 
+                renderSpec(spec, index, 'gaming', 'text-neon-blue')
+              )}
             </div>
           </div>
 
@@ -80,25 +175,59 @@ const PCSpecs = () => {
             </div>
             
             <div className="space-y-6">
-              {streamingPC.specs.map((spec, index) => (
-                <div key={index} className="flex items-start space-x-4 group hover:scale-105 transition-transform duration-300">
-                  <div className="p-3 rounded-lg bg-gray-800/50 group-hover:bg-gray-700/50 transition-colors duration-300">
-                    <spec.icon size={24} className="text-neon-purple" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-lg font-gaming font-bold text-white mb-1">
-                      {spec.label}
-                    </h4>
-                    <p className="text-gray-300 leading-relaxed">
-                      {spec.value}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              {streamingPC.specs.map((spec, index) => 
+                renderSpec(spec, index, 'streaming', 'text-neon-purple')
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {editingSpec && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80" onClick={handleCancel}>
+          <div className="relative w-full max-w-md bg-card-bg rounded-lg p-8" onClick={e => e.stopPropagation()}>
+            <h2 className="text-2xl font-gaming mb-4">Edit PC Spec</h2>
+            {error && <div className="text-red-400 font-bold mb-4">{error}</div>}
+            <div className="space-y-4">
+              <div>
+                <label className="block mb-1 text-sm">Label</label>
+                <input
+                  type="text"
+                  value={editForm.label}
+                  onChange={e => setEditForm(f => ({ ...f, label: e.target.value }))}
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block mb-1 text-sm">Value</label>
+                <textarea
+                  value={editForm.value}
+                  onChange={e => setEditForm(f => ({ ...f, value: e.target.value }))}
+                  rows={3}
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg"
+                />
+              </div>
+            </div>
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={handleSave}
+                disabled={isLoading}
+                className="flex-1 cyber-button"
+              >
+                {isLoading ? 'Saving...' : 'Save Changes'}
+              </button>
+              <button
+                onClick={handleCancel}
+                className="flex-1 cyber-button border-red-500 text-red-500 hover:bg-red-500 hover:text-dark-bg"
+              >
+                Cancel
+              </button>
+            </div>
+            <button className="absolute top-2 right-2 text-lg font-bold" onClick={handleCancel}>×</button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

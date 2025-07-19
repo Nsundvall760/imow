@@ -30,7 +30,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Setup lowdb
 const dbFile = path.join(__dirname, 'db.json');
 const adapter = new JSONFile(dbFile);
-const db = new Low(adapter, { builds: [], clips: [], mapGuides: [] }); // Set default data here
+const db = new Low(adapter, { builds: [], clips: [], mapGuides: [], pcSpecs: {} }); // Set default data here
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -53,7 +53,7 @@ const upload = multer({ storage });
 // Initialize DB with builds array if not present
 async function initDB() {
   await db.read();
-  db.data ||= { builds: [], clips: [], mapGuides: [] };
+  db.data ||= { builds: [], clips: [], mapGuides: [], pcSpecs: {} };
   await db.write();
 }
 
@@ -445,6 +445,34 @@ app.post('/api/map-guides/:map/loot-route', upload.single('image'), async (req, 
   guide.lootRoutes.push(lootRoute);
   await db.write();
   res.json({ success: true, lootRoutes: guide.lootRoutes });
+});
+
+// --- PC Specs Endpoints ---
+
+// Get PC specs
+app.get('/api/pc-specs', async (req, res) => {
+  await db.read();
+  res.json(db.data.pcSpecs || {});
+});
+
+// Update gaming PC specs (admin/mod only)
+app.patch('/api/pc-specs/gaming', async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) return res.status(401).json({ error: 'Unauthorized' });
+  await db.read();
+  if (!db.data.pcSpecs) db.data.pcSpecs = {};
+  db.data.pcSpecs.gamingPC = req.body;
+  await db.write();
+  res.json(db.data.pcSpecs.gamingPC);
+});
+
+// Update streaming PC specs (admin/mod only)
+app.patch('/api/pc-specs/streaming', async (req, res) => {
+  if (!isAdmin(req) && !isMod(req)) return res.status(401).json({ error: 'Unauthorized' });
+  await db.read();
+  if (!db.data.pcSpecs) db.data.pcSpecs = {};
+  db.data.pcSpecs.streamingPC = req.body;
+  await db.write();
+  res.json(db.data.pcSpecs.streamingPC);
 });
 
 // Test endpoint
