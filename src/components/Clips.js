@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Eye, Heart, Share2, ExternalLink, Plus, Edit, Trash2 } from 'lucide-react';
+import { Play, Share2, ExternalLink, Plus, Edit, Trash2 } from 'lucide-react';
 
 const Clips = () => {
   const [activeTab, setActiveTab] = useState('featured');
@@ -315,18 +315,8 @@ const Clips = () => {
                     {clip.description}
                   </p>
 
-                  {/* Stats */}
-                  <div className="flex items-center justify-between text-sm text-gray-400">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-1">
-                        <Eye size={14} />
-                        <span>{clip.views}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Heart size={14} />
-                        <span>{clip.likes}</span>
-                      </div>
-                    </div>
+                  {/* Share Button */}
+                  <div className="flex items-center justify-end text-sm text-gray-400">
                     <button className="text-neon-blue hover:text-neon-green transition-colors duration-300">
                       <Share2 size={16} />
                     </button>
