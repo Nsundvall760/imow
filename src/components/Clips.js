@@ -11,9 +11,8 @@ const Clips = () => {
 
   // Check if user is admin/mod
   useEffect(() => {
-    const adminSession = localStorage.getItem('adminSession');
-    const modSession = localStorage.getItem('modSession');
-    setIsAdmin(adminSession === 'imow' || modSession);
+    const isAdminUser = localStorage.getItem('isAdmin') === 'true';
+    setIsAdmin(isAdminUser);
   }, []);
 
   // Fetch clips from backend
@@ -46,14 +45,14 @@ const Clips = () => {
   // Admin functions
   const handleUploadClip = async (formData) => {
     try {
-      const adminSession = localStorage.getItem('adminSession');
-      const modSession = localStorage.getItem('modSession');
+      const isAdminUser = localStorage.getItem('isAdmin') === 'true';
+      const adminUsername = localStorage.getItem('adminUsername');
       
       const response = await fetch('https://imow.onrender.com/api/clips', {
         method: 'POST',
         headers: {
-          'x-admin-session': adminSession || '',
-          'x-mod-session': modSession || ''
+          'x-admin-session': isAdminUser && adminUsername === 'imow' ? 'imow' : '',
+          'x-mod-session': isAdminUser && adminUsername !== 'imow' ? adminUsername : ''
         },
         body: formData
       });
@@ -71,14 +70,14 @@ const Clips = () => {
     if (!window.confirm('Are you sure you want to delete this clip?')) return;
     
     try {
-      const adminSession = localStorage.getItem('adminSession');
-      const modSession = localStorage.getItem('modSession');
+      const isAdminUser = localStorage.getItem('isAdmin') === 'true';
+      const adminUsername = localStorage.getItem('adminUsername');
       
       const response = await fetch(`https://imow.onrender.com/api/clips/${clipId}`, {
         method: 'DELETE',
         headers: {
-          'x-admin-session': adminSession || '',
-          'x-mod-session': modSession || ''
+          'x-admin-session': isAdminUser && adminUsername === 'imow' ? 'imow' : '',
+          'x-mod-session': isAdminUser && adminUsername !== 'imow' ? adminUsername : ''
         }
       });
       
@@ -92,14 +91,14 @@ const Clips = () => {
 
   const handleEditClip = async (clipId, formData) => {
     try {
-      const adminSession = localStorage.getItem('adminSession');
-      const modSession = localStorage.getItem('modSession');
+      const isAdminUser = localStorage.getItem('isAdmin') === 'true';
+      const adminUsername = localStorage.getItem('adminUsername');
       
       const response = await fetch(`https://imow.onrender.com/api/clips/${clipId}`, {
         method: 'PATCH',
         headers: {
-          'x-admin-session': adminSession || '',
-          'x-mod-session': modSession || ''
+          'x-admin-session': isAdminUser && adminUsername === 'imow' ? 'imow' : '',
+          'x-mod-session': isAdminUser && adminUsername !== 'imow' ? adminUsername : ''
         },
         body: formData
       });
