@@ -219,15 +219,15 @@ const Clips = () => {
                       placeholder="Twitch URL (optional)"
                       className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
                     />
-                    <p className="text-xs text-gray-400">
-                      Add Twitch clip URL to make the clip playable (e.g., https://www.twitch.tv/imow/clip/...)
-                    </p>
                     <input
                       type="file"
                       name="thumbnail"
-                      accept="image/*"
+                      accept="image/*,video/*"
                       className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
                     />
+                    <p className="text-xs text-gray-400">
+                      Upload a video file (.mp4, .mov, etc.) or image thumbnail
+                    </p>
                     <div className="flex gap-2">
                       <button
                         type="submit"
@@ -254,16 +254,25 @@ const Clips = () => {
             {filteredClips.map((clip) => (
               <div 
                 key={clip.id} 
-                className={`card-glow group hover:scale-105 transition-all duration-300 ${clip.twitchUrl ? 'cursor-pointer' : ''}`}
-                onClick={clip.twitchUrl ? () => window.open(clip.twitchUrl, '_blank') : undefined}
+                className="card-glow group hover:scale-105 transition-all duration-300"
               >
-                {/* Thumbnail */}
+                {/* Video Player */}
                 <div className="relative overflow-hidden rounded-t-lg">
-                  <img 
-                    src={clip.thumbnail || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300d4ff'%3E${encodeURIComponent(clip.title)}%3C/text%3E%3C/svg%3E`}
-                    alt={clip.title}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
+                  {clip.thumbnail && clip.thumbnail.endsWith('.mp4') ? (
+                    <video 
+                      src={`https://imow.onrender.com${clip.thumbnail}`}
+                      className="w-full h-48 object-cover"
+                      controls
+                      preload="metadata"
+                      poster={`data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300d4ff'%3E${encodeURIComponent(clip.title)}%3C/text%3E%3C/svg%3E`}
+                    />
+                  ) : (
+                    <img 
+                      src={clip.thumbnail || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%2300d4ff'%3E${encodeURIComponent(clip.title)}%3C/text%3E%3C/svg%3E`}
+                      alt={clip.title}
+                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  )}
                   
                   {/* Admin Controls */}
                   {isAdmin && (
@@ -294,21 +303,7 @@ const Clips = () => {
                     {clip.duration}
                   </div>
 
-                  {/* Play Button */}
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-neon-blue/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {clip.twitchUrl ? (
-                      <a 
-                        href={clip.twitchUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center w-full h-full"
-                      >
-                        <Play size={24} className="text-dark-bg ml-1" />
-                      </a>
-                    ) : (
-                      <Play size={24} className="text-dark-bg ml-1" />
-                    )}
-                  </div>
+
                 </div>
 
                 {/* Content */}

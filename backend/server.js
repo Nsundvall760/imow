@@ -23,7 +23,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve uploaded images statically
+// Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Setup lowdb
