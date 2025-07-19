@@ -1,41 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Play, Zap, ArrowRight } from 'lucide-react';
 
 const Hero = () => {
-  const [isLive, setIsLive] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const fetchTwitchData = async () => {
-    try {
-      console.log('Fetching Twitch data...');
-      const response = await fetch('https://imow.onrender.com/api/twitch/stream');
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Twitch data received:', data);
-        setIsLive(data.isLive);
-      } else {
-        console.log('Twitch API response not ok:', response.status);
-        // Fallback to offline state
-        setIsLive(false);
-      }
-    } catch (error) {
-      console.log('Error fetching Twitch data:', error);
-      // Keep default offline state if API fails
-      setIsLive(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTwitchData();
-    
-    // Update every 30 seconds
-    const interval = setInterval(fetchTwitchData, 30000);
-    
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -63,22 +29,7 @@ const Hero = () => {
               </p>
             </div>
 
-            {/* Live Status */}
-            {!loading && (
-              <div className="flex items-center justify-center lg:justify-start">
-                {isLive ? (
-                  <div className="flex items-center space-x-2 bg-red-500/20 border border-red-500/50 rounded-full px-4 py-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                    <span className="text-red-400 font-medium">LIVE</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-2 bg-gray-500/20 border border-gray-500/50 rounded-full px-4 py-2">
-                    <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                    <span className="text-gray-400 font-medium">OFFLINE</span>
-                  </div>
-                )}
-              </div>
-            )}
+
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
