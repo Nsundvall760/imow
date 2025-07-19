@@ -41,9 +41,11 @@ const Bio = () => {
     }
   });
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [editingField, setEditingField] = useState(null);
   const [editForm, setEditForm] = useState({ content: '' });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
@@ -59,10 +61,16 @@ const Bio = () => {
       const response = await fetch(`${config.API_BASE_URL}/api/bio`);
       if (response.ok) {
         const data = await response.json();
-        setBioData(data);
+        // Merge with default data to ensure all fields exist
+        setBioData(prevData => ({
+          ...prevData,
+          ...data
+        }));
       }
     } catch (error) {
       console.error('Error fetching bio data:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +83,7 @@ const Bio = () => {
   const handleSave = async () => {
     if (!editingField) return;
     
-    setIsLoading(true);
+    setIsSaving(true);
     setError('');
     
     try {
@@ -143,6 +151,20 @@ const Bio = () => {
     { label: "Stream Hours", value: "1000+", icon: Clock },
     { label: "Community Size", value: "50K+", icon: Users }
   ];
+
+  if (isLoading) {
+    return (
+      <section id="about" className="py-20 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="card-glow p-10 md:p-16 bg-card-bg/80 backdrop-blur-md rounded-2xl shadow-lg">
+            <div className="text-center">
+              <div className="text-4xl font-gaming text-neon-blue animate-pulse mb-4">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="about" className="py-20 relative">
@@ -279,10 +301,10 @@ const Bio = () => {
             <div className="flex gap-4 mt-6">
               <button
                 onClick={handleSave}
-                disabled={isLoading}
+                disabled={isSaving}
                 className="flex-1 cyber-button"
               >
-                {isLoading ? 'Saving...' : 'Save Changes'}
+                {isSaving ? 'Saving...' : 'Save Changes'}
               </button>
               <button
                 onClick={handleCancel}
