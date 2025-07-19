@@ -9,6 +9,11 @@ const Clips = () => {
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [editingClip, setEditingClip] = useState(null);
 
+  // Debug: Log editingClip state
+  useEffect(() => {
+    console.log('DEBUG: editingClip state:', editingClip);
+  }, [editingClip]);
+
   // Check if user is admin/mod
   useEffect(() => {
     const isAdminUser = localStorage.getItem('isAdmin') === 'true';
@@ -249,6 +254,80 @@ const Clips = () => {
             </div>
           )}
 
+          {/* Edit Clip Modal */}
+          {editingClip && (
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+              <div className="bg-card-bg rounded-lg p-6 max-w-md w-full">
+                <h3 className="text-xl font-gaming text-neon-blue mb-4">Edit Clip</h3>
+                <form onSubmit={e => {
+                  e.preventDefault();
+                  const formData = new FormData(e.target);
+                  handleEditClip(editingClip.id, formData);
+                }}>
+                  <div className="space-y-4">
+                    <input
+                      name="title"
+                      defaultValue={editingClip.title}
+                      placeholder="Clip Title"
+                      required
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <textarea
+                      name="description"
+                      defaultValue={editingClip.description}
+                      placeholder="Description"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white h-20"
+                    />
+                    <select
+                      name="category"
+                      defaultValue={editingClip.category}
+                      required
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    >
+                      <option value="">Select Category</option>
+                      <option value="featured">Featured</option>
+                      <option value="educational">Educational</option>
+                      <option value="community">Community</option>
+                    </select>
+                    <input
+                      name="duration"
+                      defaultValue={editingClip.duration}
+                      placeholder="Duration (e.g., 2:34)"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <input
+                      name="twitchUrl"
+                      defaultValue={editingClip.twitchUrl}
+                      placeholder="Twitch URL (optional)"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <input
+                      type="file"
+                      name="thumbnail"
+                      accept="image/*,video/*"
+                      className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="flex-1 bg-neon-blue text-dark-bg py-2 rounded font-gaming"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditingClip(null)}
+                        className="flex-1 bg-gray-600 text-white py-2 rounded font-gaming"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
           {/* Clips Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredClips.map((clip) => (
@@ -280,6 +359,7 @@ const Clips = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
+                          console.log('DEBUG: Edit button clicked, setting editingClip:', clip);
                           setEditingClip(clip);
                         }}
                         className="w-8 h-8 bg-neon-blue/90 rounded flex items-center justify-center hover:bg-neon-blue"
