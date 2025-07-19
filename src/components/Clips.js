@@ -5,20 +5,15 @@ const Clips = () => {
   const [activeTab, setActiveTab] = useState('featured');
   const [clips, setClips] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [editingClip, setEditingClip] = useState(null);
+
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
   // Debug: Log editingClip state
   useEffect(() => {
     console.log('DEBUG: editingClip state:', editingClip);
   }, [editingClip]);
-
-  // Check if user is admin/mod
-  useEffect(() => {
-    const isAdminUser = localStorage.getItem('isAdmin') === 'true';
-    setIsAdmin(isAdminUser);
-  }, []);
 
   // Fetch clips from backend
   useEffect(() => {
