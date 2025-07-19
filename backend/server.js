@@ -148,7 +148,26 @@ function isAdmin(req) {
   return req.headers['x-admin-session'] === 'imow';
 }
 function isMod(req) {
-  return sessions[req.headers['x-mod-session']];
+  const session = req.headers['x-mod-session'];
+  console.log('Backend: Checking mod session:', session);
+  console.log('Backend: Available sessions:', sessions);
+  
+  // Check if session exists in memory
+  const isValid = sessions[session];
+  console.log('Backend: Session valid:', isValid);
+  
+  if (isValid) return true;
+  
+  // Fallback: check if username exists in mods list (for server restarts)
+  try {
+    const mods = readMods();
+    const modExists = mods.find(m => m.username === session);
+    console.log('Backend: Fallback check - mod exists:', !!modExists);
+    return !!modExists;
+  } catch (error) {
+    console.log('Backend: Error checking mods file:', error);
+    return false;
+  }
 }
 
 // Mod login
