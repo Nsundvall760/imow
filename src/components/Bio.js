@@ -79,11 +79,21 @@ const Bio = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('Bio data received:', data);
-        // Merge with default data to ensure all fields exist
-        setBioData(prevData => ({
-          ...prevData,
-          ...data
-        }));
+        // Merge with default data to ensure all fields exist, preserving icon and color properties
+        setBioData(prevData => {
+          const mergedData = { ...prevData, ...data };
+          
+          // Ensure achievements have icon and color properties
+          if (mergedData.achievements && prevData.achievements) {
+            mergedData.achievements = mergedData.achievements.map((achievement, index) => ({
+              ...achievement,
+              icon: prevData.achievements[index]?.icon || achievement.icon,
+              color: prevData.achievements[index]?.color || achievement.color
+            }));
+          }
+          
+          return mergedData;
+        });
       } else {
         console.error('Bio API error:', response.status, response.statusText);
         setBackendAvailable(false);
