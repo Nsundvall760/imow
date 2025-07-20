@@ -264,16 +264,18 @@ const Bio = () => {
               <h3 className="text-3xl font-gaming text-neon-green mb-8">
                 Achievements
               </h3>
-              {bioData.achievements.map((achievement, index) => (
-                <div 
-                  key={index} 
-                  className="card-glow p-6 group hover:scale-105 transition-all duration-300"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="flex items-start space-x-4">
-                    <div className={`p-3 rounded-lg bg-gray-800/50 group-hover:bg-gray-700/50 transition-colors duration-300`}>
-                      <achievement.icon size={24} className={achievement.color} />
-                    </div>
+              {bioData.achievements.map((achievement, index) => {
+                const IconComponent = achievement.icon;
+                return (
+                  <div 
+                    key={index} 
+                    className="card-glow p-6 group hover:scale-105 transition-all duration-300"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="flex items-start space-x-4">
+                      <div className={`p-3 rounded-lg bg-gray-800/50 group-hover:bg-gray-700/50 transition-colors duration-300`}>
+                        <IconComponent size={24} className={achievement.color} />
+                      </div>
                     <div className="flex-1">
                       <div className="relative">
                         <h4 className="text-xl font-gaming font-bold text-white mb-2">
@@ -292,7 +294,8 @@ const Bio = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
 
