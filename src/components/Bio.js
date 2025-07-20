@@ -186,9 +186,9 @@ const Bio = () => {
     </div>
   );
 
-  const renderEditableStat = (statKey, statData, icon, iconColor) => (
+  const renderEditableStat = (statKey, statData, IconComponent, iconColor) => (
     <div className="card-glow p-6 text-center group hover:scale-105 transition-transform duration-300 relative">
-      <icon size={32} className={`mx-auto mb-3 ${iconColor} group-hover:animate-pulse`} />
+      <IconComponent size={32} className={`mx-auto mb-3 ${iconColor} group-hover:animate-pulse`} />
       <div className="text-2xl font-gaming font-bold text-white mb-1 relative">
         {statData.value}
         {isAdmin && backendAvailable && (
