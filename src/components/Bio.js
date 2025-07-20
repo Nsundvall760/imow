@@ -54,6 +54,7 @@ const Bio = () => {
 
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const adminUsername = localStorage.getItem('adminUsername');
+  const [backendAvailable, setBackendAvailable] = useState(true);
 
   // Load bio data from backend
   useEffect(() => {
@@ -63,7 +64,16 @@ const Bio = () => {
   const fetchBioData = async () => {
     try {
       console.log('Fetching bio data from:', `${config.API_BASE_URL}/api/bio`);
-      const response = await fetch(`${config.API_BASE_URL}/api/bio`);
+      
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch(`${config.API_BASE_URL}/api/bio`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
       console.log('Bio response status:', response.status);
       
       if (response.ok) {
@@ -76,9 +86,17 @@ const Bio = () => {
         }));
       } else {
         console.error('Bio API error:', response.status, response.statusText);
+        setBackendAvailable(false);
+        // Continue with default data if API fails
       }
     } catch (error) {
-      console.error('Error fetching bio data:', error);
+      if (error.name === 'AbortError') {
+        console.log('Bio API request timed out, using default data');
+      } else {
+        console.error('Error fetching bio data:', error);
+      }
+      setBackendAvailable(false);
+      // Continue with default data if fetch fails
     } finally {
       setIsLoading(false);
     }
@@ -157,7 +175,7 @@ const Bio = () => {
       <p className={className}>
         {content}
       </p>
-      {isAdmin && (
+      {isAdmin && backendAvailable && (
         <button
           onClick={() => handleEdit(field, content)}
           className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-1 text-gray-400 hover:text-neon-blue bg-gray-800 rounded"
@@ -173,7 +191,7 @@ const Bio = () => {
       <icon size={32} className={`mx-auto mb-3 ${iconColor} group-hover:animate-pulse`} />
       <div className="text-2xl font-gaming font-bold text-white mb-1 relative">
         {statData.value}
-        {isAdmin && (
+        {isAdmin && backendAvailable && (
           <button
             onClick={() => handleEdit(`stats.${statKey}.value`, statData.value)}
             className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-1 text-gray-400 hover:text-neon-blue bg-gray-800 rounded"
@@ -184,7 +202,7 @@ const Bio = () => {
       </div>
       <div className="text-sm text-gray-400 relative">
         {statData.label}
-        {isAdmin && (
+        {isAdmin && backendAvailable && (
           <button
             onClick={() => handleEdit(`stats.${statKey}.label`, statData.label, statData.label)}
             className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-1 text-gray-400 hover:text-neon-blue bg-gray-800 rounded"
@@ -261,7 +279,7 @@ const Bio = () => {
                         <h4 className="text-xl font-gaming font-bold text-white mb-2">
                           {achievement.title}
                         </h4>
-                        {isAdmin && (
+                        {isAdmin && backendAvailable && (
                           <button
                             onClick={() => handleEdit(`achievement.${index}.title`, achievement.title)}
                             className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-1 text-gray-400 hover:text-neon-blue bg-gray-800 rounded"
