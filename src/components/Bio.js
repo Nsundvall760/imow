@@ -196,9 +196,16 @@ const Bio = () => {
     </div>
   );
 
-  const renderEditableStat = (statKey, statData, IconComponent, iconColor) => (
-    <div className="card-glow p-6 text-center group hover:scale-105 transition-transform duration-300 relative">
-      <IconComponent size={32} className={`mx-auto mb-3 ${iconColor} group-hover:animate-pulse`} />
+  const renderEditableStat = (statKey, statData, IconComponent, iconColor) => {
+    // Safety check for required props
+    if (!statData || !statData.value || !statData.label || !IconComponent) {
+      console.error('Missing required props for renderEditableStat:', { statKey, statData, IconComponent });
+      return null;
+    }
+    
+    return (
+      <div className="card-glow p-6 text-center group hover:scale-105 transition-transform duration-300 relative">
+        <IconComponent size={32} className={`mx-auto mb-3 ${iconColor} group-hover:animate-pulse`} />
       <div className="text-2xl font-gaming font-bold text-white mb-1 relative">
         {statData.value}
         {isAdmin && backendAvailable && (
@@ -222,7 +229,8 @@ const Bio = () => {
         )}
       </div>
     </div>
-  );
+    );
+  };
 
   if (isLoading) {
     return (
@@ -263,9 +271,9 @@ const Bio = () => {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 gap-6">
-                {renderEditableStat('averageRank', bioData.stats.averageRank, Award, 'text-neon-blue')}
-                {renderEditableStat('streamHours', bioData.stats.streamHours, Clock, 'text-neon-purple')}
-                {renderEditableStat('communitySize', bioData.stats.communitySize, Users, 'text-neon-green')}
+                {bioData.stats && bioData.stats.averageRank && renderEditableStat('averageRank', bioData.stats.averageRank, Award, 'text-neon-blue')}
+                {bioData.stats && bioData.stats.streamHours && renderEditableStat('streamHours', bioData.stats.streamHours, Clock, 'text-neon-purple')}
+                {bioData.stats && bioData.stats.communitySize && renderEditableStat('communitySize', bioData.stats.communitySize, Users, 'text-neon-green')}
               </div>
             </div>
 
@@ -274,7 +282,13 @@ const Bio = () => {
               <h3 className="text-3xl font-gaming text-neon-green mb-8">
                 Achievements
               </h3>
-              {bioData.achievements.map((achievement, index) => {
+              {bioData.achievements && bioData.achievements.map((achievement, index) => {
+                // Safety check for achievement data
+                if (!achievement || !achievement.icon || !achievement.title || !achievement.description) {
+                  console.error('Invalid achievement data:', achievement);
+                  return null;
+                }
+                
                 const IconComponent = achievement.icon;
                 return (
                   <div 
@@ -333,21 +347,21 @@ const Bio = () => {
                   <Target size={32} className="text-neon-blue" />
                 </div>
                 <h4 className="text-xl font-gaming text-white">Precision</h4>
-                {renderEditableText(bioData.gamingPhilosophy.precision, 'philosophy.precision', "text-gray-300")}
+                {bioData.gamingPhilosophy && bioData.gamingPhilosophy.precision && renderEditableText(bioData.gamingPhilosophy.precision, 'philosophy.precision', "text-gray-300")}
               </div>
               <div className="space-y-4">
                 <div className="w-16 h-16 bg-neon-green/20 rounded-full flex items-center justify-center mx-auto">
                   <Users size={32} className="text-neon-green" />
                 </div>
                 <h4 className="text-xl font-gaming text-white">Community</h4>
-                {renderEditableText(bioData.gamingPhilosophy.community, 'philosophy.community', "text-gray-300")}
+                {bioData.gamingPhilosophy && bioData.gamingPhilosophy.community && renderEditableText(bioData.gamingPhilosophy.community, 'philosophy.community', "text-gray-300")}
               </div>
               <div className="space-y-4">
                 <div className="w-16 h-16 bg-neon-purple/20 rounded-full flex items-center justify-center mx-auto">
                   <Trophy size={32} className="text-neon-purple" />
                 </div>
                 <h4 className="text-xl font-gaming text-white">Excellence</h4>
-                {renderEditableText(bioData.gamingPhilosophy.excellence, 'philosophy.excellence', "text-gray-300")}
+                {bioData.gamingPhilosophy && bioData.gamingPhilosophy.excellence && renderEditableText(bioData.gamingPhilosophy.excellence, 'philosophy.excellence', "text-gray-300")}
               </div>
             </div>
           </div>
