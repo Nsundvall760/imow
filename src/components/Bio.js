@@ -101,7 +101,12 @@ const Bio = () => {
       
       if (editingField.startsWith('achievement.')) {
         const index = parseInt(editingField.split('.')[1]);
-        updatedData.achievements[index].description = editForm.content;
+        const subKey = editingField.split('.')[2];
+        if (subKey === 'title') {
+          updatedData.achievements[index].title = editForm.content;
+        } else if (subKey === 'description') {
+          updatedData.achievements[index].description = editForm.content;
+        }
       } else if (editingField.startsWith('philosophy.')) {
         const key = editingField.split('.')[1];
         updatedData.gamingPhilosophy[key] = editForm.content;
@@ -252,10 +257,20 @@ const Bio = () => {
                       <achievement.icon size={24} className={achievement.color} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-xl font-gaming font-bold text-white mb-2">
-                        {achievement.title}
-                      </h4>
-                      {renderEditableText(achievement.description, `achievement.${index}`, "text-gray-300 leading-relaxed")}
+                      <div className="relative">
+                        <h4 className="text-xl font-gaming font-bold text-white mb-2">
+                          {achievement.title}
+                        </h4>
+                        {isAdmin && (
+                          <button
+                            onClick={() => handleEdit(`achievement.${index}.title`, achievement.title)}
+                            className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-1 text-gray-400 hover:text-neon-blue bg-gray-800 rounded"
+                          >
+                            <Edit size={12} />
+                          </button>
+                        )}
+                      </div>
+                      {renderEditableText(achievement.description, `achievement.${index}.description`, "text-gray-300 leading-relaxed")}
                     </div>
                   </div>
                 </div>
