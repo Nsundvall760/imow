@@ -79,6 +79,14 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     fetchBuilds();
   }, []);
 
+  useEffect(() => {
+    // Set a default gun category if nothing is selected
+    if (!activeGunCategory && !activeMapGuide) {
+      setActiveGunCategory(CATEGORIES[0]);
+    }
+    // eslint-disable-next-line
+  }, []);
+
   // Click outside to close Gun Builds dropdown
   useEffect(() => {
     function handleClickOutside(event) {
@@ -431,14 +439,27 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
       .filter(f => f.label);
     setEditMapGuideData(d => ({ ...d, kits: cleaned }));
     setMapGuideData(g => ({ ...g, kits: cleaned }));
-    await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
-      },
-      body: JSON.stringify({ kits: cleaned })
-    });
+    try {
+      const res = await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
+        },
+        body: JSON.stringify({ kits: cleaned })
+      });
+      const data = await res.json().catch(() => null);
+      console.log('saveKitsFields PATCH response:', data);
+      if (!res.ok || !data || !Array.isArray(data.kits)) {
+        setMapGuideError('Failed to save kits. Please try again.');
+        return;
+      }
+      setEditMapGuideData(d => ({ ...d, kits: data.kits }));
+      setMapGuideData(g => ({ ...g, kits: data.kits }));
+    } catch (err) {
+      setMapGuideError('Failed to save kits: ' + err.message);
+      console.error('saveKitsFields error:', err);
+    }
   }
 
   // Add this helper function near saveTipsModal
@@ -446,14 +467,27 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     const tipsArr = fields.map(t => t.trim()).filter(Boolean);
     setEditMapGuideData(d => ({ ...d, tips: tipsArr.join('\n') }));
     setMapGuideData(g => ({ ...g, tips: tipsArr }));
-    await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
-      },
-      body: JSON.stringify({ tips: tipsArr })
-    });
+    try {
+      const res = await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
+        },
+        body: JSON.stringify({ tips: tipsArr })
+      });
+      const data = await res.json().catch(() => null);
+      console.log('saveTipsFields PATCH response:', data);
+      if (!res.ok || !data || !Array.isArray(data.tips)) {
+        setMapGuideError('Failed to save tips. Please try again.');
+        return;
+      }
+      setEditMapGuideData(d => ({ ...d, tips: data.tips }));
+      setMapGuideData(g => ({ ...g, tips: data.tips }));
+    } catch (err) {
+      setMapGuideError('Failed to save tips: ' + err.message);
+      console.error('saveTipsFields error:', err);
+    }
   }
 
   return (
