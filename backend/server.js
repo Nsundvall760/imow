@@ -407,12 +407,23 @@ app.get('/api/map-guides/:map', async (req, res) => {
 app.patch('/api/map-guides/:map', async (req, res) => {
   if (!isAdmin(req) && !isMod(req)) return res.status(401).json({ error: 'Unauthorized' });
   await db.read();
-  const guide = (db.data.mapGuides || []).find(g => g.map.toLowerCase() === req.params.map.toLowerCase());
-  if (!guide) return res.status(404).json({ error: 'Map guide not found' });
-  const { kits, tips, lootRoutes } = req.body;
-  if (kits !== undefined) guide.kits = kits;
-  if (tips !== undefined) guide.tips = tips;
-  if (lootRoutes !== undefined) guide.lootRoutes = lootRoutes;
+  let guide = (db.data.mapGuides || []).find(g => g.map.toLowerCase() === req.params.map.toLowerCase());
+  if (!guide) {
+    // Create new guide if not found
+    guide = {
+      map: req.params.map,
+      kits: req.body.kits || [],
+      tips: req.body.tips || [],
+      lootRoutes: req.body.lootRoutes || [],
+      images: []
+    };
+    db.data.mapGuides.push(guide);
+  } else {
+    const { kits, tips, lootRoutes } = req.body;
+    if (kits !== undefined) guide.kits = kits;
+    if (tips !== undefined) guide.tips = tips;
+    if (lootRoutes !== undefined) guide.lootRoutes = lootRoutes;
+  }
   await db.write();
   res.json(guide);
 });
