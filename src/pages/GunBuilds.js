@@ -53,14 +53,14 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
   const [editingSection, setEditingSection] = useState(null); // 'images', 'kits', 'tips', 'lootRoutes'
   const [tempEditData, setTempEditData] = useState({ kits: '', tips: '', lootRoutes: '' });
   const [showKitsModal, setShowKitsModal] = useState(false);
-  const [kitsFields, setKitsFields] = useState({
-    primaryWeapon: '',
-    headgear: '',
-    headset: '',
-    bodyArmor: '',
-    backpack: '',
-    keys: ''
-  });
+  const [kitsFields, setKitsFields] = useState([
+    { label: 'Primary Weapon', value: '' },
+    { label: 'Headgear', value: '' },
+    { label: 'Headset', value: '' },
+    { label: 'Body Armor', value: '' },
+    { label: 'Backpack', value: '' },
+    { label: 'Keys to bring', value: '' }
+  ]);
   // Add state for tips modal
   const [showTipsModal, setShowTipsModal] = useState(false);
   const [tipsFields, setTipsFields] = useState([]);
@@ -309,39 +309,41 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
   // Helper to open kits modal with current values
   function openKitsModal() {
     const kitsArr = mapGuideData.kits || [];
-    setKitsFields({
-      primaryWeapon: kitsArr[0] || '',
-      headgear: kitsArr[1] || '',
-      headset: kitsArr[2] || '',
-      bodyArmor: kitsArr[3] || '',
-      backpack: kitsArr[4] || '',
-      keys: kitsArr[5] || ''
-    });
+    // If kitsArr is an array of strings, map to default labels; if array of objects, use as is
+    let fields;
+    if (kitsArr.length && typeof kitsArr[0] === 'object') {
+      fields = kitsArr.map(f => ({ label: f.label, value: f.value }));
+    } else {
+      // fallback for old data: map to default labels
+      const defaultLabels = [
+        'Primary Weapon', 'Headgear', 'Headset', 'Body Armor', 'Backpack', 'Keys to bring'
+      ];
+      fields = (kitsArr.length ? kitsArr : Array(defaultLabels.length).fill('')).map((v, i) => ({
+        label: defaultLabels[i] || `Field ${i+1}`,
+        value: v || ''
+      }));
+    }
+    setKitsFields(fields);
     setShowKitsModal(true);
   }
 
   // Helper to save kits modal
   async function saveKitsModal() {
-    const filled = {
-      primaryWeapon: kitsFields.primaryWeapon.trim() || 'No suggestions',
-      headgear: kitsFields.headgear.trim() || 'No suggestions',
-      headset: kitsFields.headset.trim() || 'No suggestions',
-      bodyArmor: kitsFields.bodyArmor.trim() || 'No suggestions',
-      backpack: kitsFields.backpack.trim() || 'No suggestions',
-      keys: kitsFields.keys.trim() || 'No suggestions'
-    };
-    const kitsArr = [filled.primaryWeapon, filled.headgear, filled.headset, filled.bodyArmor, filled.backpack, filled.keys];
-    setEditMapGuideData(d => ({ ...d, kits: kitsArr.join('\n') }));
-    setMapGuideData(g => ({ ...g, kits: kitsArr })); // Update UI immediately
+    // Clean up fields: trim, remove empty labels
+    const cleaned = kitsFields
+      .map(f => ({ label: f.label.trim() || 'Field', value: f.value.trim() || 'No suggestions' }))
+      .filter(f => f.label);
+    setEditMapGuideData(d => ({ ...d, kits: cleaned }));
+    setMapGuideData(g => ({ ...g, kits: cleaned }));
     setShowKitsModal(false);
-    // Save to backend right away
+    // Save to backend
     await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
       },
-      body: JSON.stringify({ kits: kitsArr })
+      body: JSON.stringify({ kits: cleaned })
     });
   }
 
@@ -767,30 +769,42 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
           <div className="relative w-full max-w-md bg-card-bg rounded-lg p-8" onClick={e => e.stopPropagation()}>
             <h2 className="text-2xl font-gaming mb-4">Edit Kits</h2>
             <div className="space-y-3">
-              <div>
-                <label className="block mb-1 text-sm">Primary Weapon</label>
-                <input className="w-full px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white" value={kitsFields.primaryWeapon} onChange={e => setKitsFields(f => ({ ...f, primaryWeapon: e.target.value }))} />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm">Headgear</label>
-                <input className="w-full px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white" value={kitsFields.headgear} onChange={e => setKitsFields(f => ({ ...f, headgear: e.target.value }))} />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm">Headset</label>
-                <input className="w-full px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white" value={kitsFields.headset} onChange={e => setKitsFields(f => ({ ...f, headset: e.target.value }))} />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm">Body Armor</label>
-                <input className="w-full px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white" value={kitsFields.bodyArmor} onChange={e => setKitsFields(f => ({ ...f, bodyArmor: e.target.value }))} />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm">Backpack</label>
-                <input className="w-full px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white" value={kitsFields.backpack} onChange={e => setKitsFields(f => ({ ...f, backpack: e.target.value }))} />
-              </div>
-              <div>
-                <label className="block mb-1 text-sm">Keys to bring</label>
-                <input className="w-full px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white" value={kitsFields.keys} onChange={e => setKitsFields(f => ({ ...f, keys: e.target.value }))} />
-              </div>
+              {kitsFields.map((field, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  {isAdmin || adminUsername ? (
+                    <input
+                      className="w-1/3 px-2 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white text-sm"
+                      value={field.label}
+                      onChange={e => setKitsFields(f => f.map((fld, i) => i === idx ? { ...fld, label: e.target.value } : fld))}
+                      placeholder="Label"
+                      title="Field label"
+                    />
+                  ) : (
+                    <label className="block mb-1 text-sm w-1/3">{field.label}</label>
+                  )}
+                  <input
+                    className="w-2/3 px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white"
+                    value={field.value}
+                    onChange={e => setKitsFields(f => f.map((fld, i) => i === idx ? { ...fld, value: e.target.value } : fld))}
+                    placeholder={field.label}
+                  />
+                  {(isAdmin || adminUsername) && kitsFields.length > 1 && (
+                    <button
+                      className="w-7 h-7 flex items-center justify-center bg-red-600 text-white rounded text-base p-0"
+                      onClick={() => setKitsFields(f => f.filter((_, i) => i !== idx))}
+                      title="Remove field"
+                      type="button"
+                    >🗑️</button>
+                  )}
+                </div>
+              ))}
+              {(isAdmin || adminUsername) && (
+                <button
+                  className="px-4 py-2 bg-neon-blue text-dark-bg rounded mt-2"
+                  onClick={() => setKitsFields(f => [...f, { label: `Field ${f.length+1}`, value: '' }])}
+                  type="button"
+                >Add Field</button>
+              )}
             </div>
             <div className="flex gap-4 mt-6 justify-end">
               <button className="px-4 py-2 bg-gray-700 text-white rounded" onClick={() => setShowKitsModal(false)}>Cancel</button>
