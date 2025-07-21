@@ -510,7 +510,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                     // Do NOT setActiveMapGuide(null) here; only do it when actually switching to Gun Builds
                   }}
                 >
-                  Guides
+                  Gun Builds
                 </button>
                 {showGunDropdown && (
                   <div className="absolute left-0 mt-2 w-48 bg-card-bg border border-neon-blue rounded-lg shadow-lg z-20">
