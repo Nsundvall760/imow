@@ -435,11 +435,10 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
 
   // Add this helper function near saveKitsModal
   async function saveKitsFields(fields) {
+    console.log('DEBUG: saveKitsFields called with', fields);
     const cleaned = fields
       .map(f => ({ label: f.label.trim() || 'Field', value: f.value.trim() || 'No suggestions' }))
       .filter(f => f.label);
-    setEditMapGuideData(d => ({ ...d, kits: cleaned }));
-    setMapGuideData(g => ({ ...g, kits: cleaned }));
     try {
       const res = await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
         method: 'PATCH',
@@ -450,16 +449,17 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
         body: JSON.stringify({ kits: cleaned })
       });
       const data = await res.json().catch(() => null);
-      console.log('saveKitsFields PATCH response:', data);
-      if (!res.ok || !data || !Array.isArray(data.kits)) {
-        setMapGuideError('Failed to save kits. Please try again.');
+      console.log('DEBUG: saveKitsFields PATCH response:', data);
+      if (!res.ok || !data || data.error || !Array.isArray(data.kits)) {
+        setMapGuideError(data && data.error ? data.error : 'Failed to save kits. Please try again.');
+        console.error('DEBUG: saveKitsFields error:', data && data.error ? data.error : 'Invalid kits array');
         return;
       }
       setEditMapGuideData(d => ({ ...d, kits: data.kits }));
       setMapGuideData(g => ({ ...g, kits: data.kits }));
     } catch (err) {
       setMapGuideError('Failed to save kits: ' + err.message);
-      console.error('saveKitsFields error:', err);
+      console.error('DEBUG: saveKitsFields exception:', err);
     }
   }
 
