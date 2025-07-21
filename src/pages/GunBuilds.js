@@ -317,19 +317,20 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
   // Helper to open kits modal with current values
   function openKitsModal() {
     const kitsArr = mapGuideData.kits || [];
-    // If kitsArr is an array of strings, map to default labels; if array of objects, use as is
-    let fields;
-    if (kitsArr.length && typeof kitsArr[0] === 'object') {
-      fields = kitsArr.map(f => ({ label: f.label, value: f.value }));
-    } else {
-      // fallback for old data: map to default labels
+    // Normalize to array of {label, value} objects
+    let fields = Array.isArray(kitsArr)
+      ? kitsArr.map((f, i) =>
+          typeof f === 'object' && f !== null && 'label' in f && 'value' in f
+            ? { label: f.label, value: f.value }
+            : { label: `Field ${i+1}`, value: String(f) }
+        )
+      : [];
+    // If empty, fallback to default labels
+    if (!fields.length) {
       const defaultLabels = [
         'Primary Weapon', 'Headgear', 'Headset', 'Body Armor', 'Backpack', 'Keys to bring'
       ];
-      fields = (kitsArr.length ? kitsArr : Array(defaultLabels.length).fill('')).map((v, i) => ({
-        label: defaultLabels[i] || `Field ${i+1}`,
-        value: v || ''
-      }));
+      fields = defaultLabels.map((label) => ({ label, value: '' }));
     }
     setKitsFields(fields);
     setShowKitsModal(true);

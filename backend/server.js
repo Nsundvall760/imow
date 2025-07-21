@@ -412,18 +412,26 @@ app.patch('/api/map-guides/:map', async (req, res) => {
     // Create new guide if not found
     guide = {
       map: req.params.map,
-      kits: req.body.kits || [],
-      tips: req.body.tips || [],
-      lootRoutes: req.body.lootRoutes || [],
+      kits: [],
+      tips: [],
+      lootRoutes: [],
       images: []
     };
     db.data.mapGuides.push(guide);
-  } else {
-    const { kits, tips, lootRoutes } = req.body;
-    if (kits !== undefined) guide.kits = kits;
-    if (tips !== undefined) guide.tips = tips;
-    if (lootRoutes !== undefined) guide.lootRoutes = lootRoutes;
   }
+  const { kits, tips, lootRoutes } = req.body;
+  if (kits !== undefined) {
+    // Normalize kits to array of {label, value}
+    guide.kits = Array.isArray(kits)
+      ? kits.map(k =>
+          typeof k === 'object' && k !== null && 'label' in k && 'value' in k
+            ? k
+            : { label: String(k), value: '' }
+        )
+      : [];
+  }
+  if (tips !== undefined) guide.tips = tips;
+  if (lootRoutes !== undefined) guide.lootRoutes = lootRoutes;
   await db.write();
   res.json(guide);
 });
