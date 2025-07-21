@@ -382,6 +382,7 @@ const Bio = () => {
                     type="text"
                     value={editForm.label}
                     onChange={e => setEditForm(f => ({ ...f, label: e.target.value }))}
+                    onBlur={e => (isAdmin || adminUsername) && handleSave()}
                     className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg"
                   />
                 </div>
@@ -391,6 +392,7 @@ const Bio = () => {
                   <textarea
                     value={editForm.content}
                     onChange={e => setEditForm(f => ({ ...f, content: e.target.value }))}
+                    onBlur={e => (isAdmin || adminUsername) && handleSave()}
                     rows={6}
                     className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg"
                   />

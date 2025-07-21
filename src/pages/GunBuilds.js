@@ -424,6 +424,38 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     setLootRouteUploading(false);
   }
 
+  // Add this helper function near saveKitsModal
+  async function saveKitsFields(fields) {
+    const cleaned = fields
+      .map(f => ({ label: f.label.trim() || 'Field', value: f.value.trim() || 'No suggestions' }))
+      .filter(f => f.label);
+    setEditMapGuideData(d => ({ ...d, kits: cleaned }));
+    setMapGuideData(g => ({ ...g, kits: cleaned }));
+    await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
+      },
+      body: JSON.stringify({ kits: cleaned })
+    });
+  }
+
+  // Add this helper function near saveTipsModal
+  async function saveTipsFields(fields) {
+    const tipsArr = fields.map(t => t.trim()).filter(Boolean);
+    setEditMapGuideData(d => ({ ...d, tips: tipsArr.join('\n') }));
+    setMapGuideData(g => ({ ...g, tips: tipsArr }));
+    await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
+      },
+      body: JSON.stringify({ tips: tipsArr })
+    });
+  }
+
   return (
     <div className="min-h-screen py-20 px-4">
       <div className="max-w-5xl mx-auto">
@@ -771,11 +803,12 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
             <div className="space-y-3">
               {kitsFields.map((field, idx) => (
                 <div key={idx} className="flex items-center gap-2">
-                  {isAdmin || adminUsername ? (
+                  {(isAdmin || adminUsername) ? (
                     <input
                       className="w-1/3 px-2 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white text-sm"
                       value={field.label}
                       onChange={e => setKitsFields(f => f.map((fld, i) => i === idx ? { ...fld, label: e.target.value } : fld))}
+                      onBlur={e => saveKitsFields(kitsFields.map((fld, i) => i === idx ? { ...fld, label: e.target.value } : fld))}
                       placeholder="Label"
                       title="Field label"
                     />
@@ -786,6 +819,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                     className="w-2/3 px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white"
                     value={field.value}
                     onChange={e => setKitsFields(f => f.map((fld, i) => i === idx ? { ...fld, value: e.target.value } : fld))}
+                    onBlur={e => saveKitsFields(kitsFields.map((fld, i) => i === idx ? { ...fld, value: e.target.value } : fld))}
                     placeholder={field.label}
                   />
                   {(isAdmin || adminUsername) && kitsFields.length > 1 && (
@@ -825,6 +859,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                     className="w-full px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white"
                     value={tip}
                     onChange={e => setTipsFields(f => f.map((t, i) => i === idx ? e.target.value : t))}
+                    onBlur={e => (isAdmin || adminUsername) && saveTipsFields(tipsFields.map((t, i) => i === idx ? e.target.value : t))}
                   />
                   <button
                     className="w-7 h-7 flex items-center justify-center bg-red-600 text-white rounded text-base p-0"
