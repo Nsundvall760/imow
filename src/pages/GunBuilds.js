@@ -702,40 +702,24 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                   <div className="text-center py-10 text-red-400">{mapGuideError}</div>
                 ) : mapGuideData && (
                   <>
-                    {/* Images Section */}
-                    <div className="mb-6">
-                      <div className="font-gaming text-lg mb-2 flex items-center gap-2">
-                        Images
-                        {isAdmin && adminUsername && adminUsername !== '' && (
-                          editingSection !== 'images' ? (
-                            <button className="ml-2 px-2 py-1 bg-neon-blue text-dark-bg rounded text-xs" onClick={() => setEditingSection('images')}>Edit</button>
-                          ) : (
-                            <>
-                              <button className="ml-2 px-2 py-1 bg-neon-blue text-dark-bg rounded text-xs" onClick={() => setEditingSection(null)}>Cancel</button>
-                            </>
-                          )
-                        )}
-                      </div>
-                      <div className="flex flex-wrap gap-4 mb-2">
-                        {mapGuideData.images.map((img, i) => (
-                          <div key={i} className="relative">
-                            <img src={`${config.API_BASE_URL}${img}`} alt="Map Guide" className="w-40 h-32 object-cover rounded border border-neon-blue" />
-                            {isAdmin && adminUsername && adminUsername !== '' && editingSection === 'images' && (
-                              <button
-                                className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center"
-                                onClick={() => handleDeleteMapGuideImage(img)}
-                                title="Delete image"
-                              >🗑️</button>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                      {isAdmin && adminUsername && adminUsername !== '' && editingSection === 'images' && (
-                        <div className="mt-2">
-                          <input type="file" accept="image/*" onChange={handleMapGuideImageUpload} />
-                        </div>
+                    {/* Change section title from Images to Map */}
+                    <div className="flex items-center mb-2">
+                      <h2 className="text-2xl font-gaming mr-2">Map</h2>
+                      {(isAdmin && adminUsername && adminUsername !== '') && (
+                        <button className="bg-neon-blue text-dark-bg px-3 py-1 rounded font-gaming text-sm" onClick={() => setEditingSection('images')}>Edit</button>
                       )}
                     </div>
+                    {/* Map image, clickable to enlarge */}
+                    {mapGuideData.images && mapGuideData.images.length > 0 && (
+                      <div className="inline-block border border-neon-blue rounded-lg overflow-hidden cursor-pointer" style={{ padding: 0, margin: 0 }} onClick={() => setModalImage(`${config.API_BASE_URL}${mapGuideData.images[0]}`)}>
+                        <img
+                          src={`${config.API_BASE_URL}${mapGuideData.images[0]}`}
+                          alt="Map"
+                          className="block w-full h-auto"
+                          style={{ display: 'block', maxWidth: '100%', borderRadius: '8px', border: 'none' }}
+                        />
+                      </div>
+                    )}
                     {/* Kits Section */}
                     <div className="mb-6">
                       <div className="font-gaming text-lg mb-2 flex items-center gap-2">
