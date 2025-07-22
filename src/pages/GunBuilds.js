@@ -788,7 +788,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                             >
                               {route.title}
                             </button>
-                            {isAdmin && adminUsername && adminUsername !== '' && editingSection === 'lootRoutes' && (
+                            {(isAdmin || adminUsername) && (
                               <button
                                 className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center"
                                 onClick={() => handleDeleteLootRoute(route.title)}
