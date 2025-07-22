@@ -491,6 +491,47 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
     }
   }
 
+  // Add handler to delete an image from a map guide
+  async function handleDeleteMapGuideImage(imageUrl) {
+    if (!window.confirm('Delete this image?')) return;
+    try {
+      const res = await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}/image`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
+        },
+        body: JSON.stringify({ imageUrl })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMapGuideData(g => ({ ...g, images: data.images }));
+      }
+    } catch (err) {
+      alert('Failed to delete image: ' + err.message);
+    }
+  }
+  // Add handler to delete a loot route from a map guide
+  async function handleDeleteLootRoute(title) {
+    if (!window.confirm('Delete this loot route?')) return;
+    try {
+      const res = await fetch(`${config.API_BASE_URL}/api/map-guides/${encodeURIComponent(activeMapGuide)}/loot-route`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
+        },
+        body: JSON.stringify({ title })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMapGuideData(g => ({ ...g, lootRoutes: data.lootRoutes }));
+      }
+    } catch (err) {
+      alert('Failed to delete loot route: ' + err.message);
+    }
+  }
+
   return (
     <div className="min-h-screen py-20 px-4">
       <div className="max-w-5xl mx-auto">
@@ -677,7 +718,16 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                       </div>
                       <div className="flex flex-wrap gap-4 mb-2">
                         {mapGuideData.images.map((img, i) => (
-                          <img key={i} src={`${config.API_BASE_URL}${img}`} alt="Map Guide" className="w-40 h-32 object-cover rounded border border-neon-blue" />
+                          <div key={i} className="relative">
+                            <img src={`${config.API_BASE_URL}${img}`} alt="Map Guide" className="w-40 h-32 object-cover rounded border border-neon-blue" />
+                            {isAdmin && adminUsername && adminUsername !== '' && editingSection === 'images' && (
+                              <button
+                                className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center"
+                                onClick={() => handleDeleteMapGuideImage(img)}
+                                title="Delete image"
+                              >🗑️</button>
+                            )}
+                          </div>
                         ))}
                       </div>
                       {isAdmin && adminUsername && adminUsername !== '' && editingSection === 'images' && (
@@ -731,13 +781,21 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {(mapGuideData.lootRoutes || []).filter(route => route && route.title && route.image).map((route) => (
-                          <button
-                            key={route.title}
-                            className="border-2 border-neon-blue text-neon-blue bg-transparent px-2 py-1 rounded font-gaming tracking-widest font-bold text-sm mr-2 mb-2"
-                            onClick={() => setModalImage(`${config.API_BASE_URL}${route.image}`)}
-                          >
-                            {route.title}
-                          </button>
+                          <div key={route.title} className="relative">
+                            <button
+                              className="border-2 border-neon-blue text-neon-blue bg-transparent px-2 py-1 rounded font-gaming tracking-widest font-bold text-sm mr-2 mb-2"
+                              onClick={() => setModalImage(`${config.API_BASE_URL}${route.image}`)}
+                            >
+                              {route.title}
+                            </button>
+                            {isAdmin && adminUsername && adminUsername !== '' && editingSection === 'lootRoutes' && (
+                              <button
+                                className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center"
+                                onClick={() => handleDeleteLootRoute(route.title)}
+                                title="Delete loot route"
+                              >🗑️</button>
+                            )}
+                          </div>
                         ))}
                       </div>
                     </div>
