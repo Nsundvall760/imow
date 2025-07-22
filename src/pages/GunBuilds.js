@@ -519,7 +519,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          ...(isAdmin ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
+          ...(isAdmin && adminUsername && adminUsername !== '' ? { 'x-admin-session': 'imow' } : adminUsername ? { 'x-mod-session': adminUsername } : {})
         },
         body: JSON.stringify({ title })
       });
@@ -788,7 +788,7 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                             >
                               {route.title}
                             </button>
-                            {(isAdmin || adminUsername) && (
+                            {(isAdmin && adminUsername && adminUsername !== '') && (
                               <button
                                 className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center"
                                 onClick={() => handleDeleteLootRoute(route.title)}
