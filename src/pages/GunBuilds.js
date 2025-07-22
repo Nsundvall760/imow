@@ -695,12 +695,11 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
                         )}
                       </div>
                       <ul className="ml-6 text-white">
-                        <li><span className="font-bold">Primary Weapon:</span> {mapGuideData.kits[0] || 'No suggestions'}</li>
-                        <li><span className="font-bold">Headgear:</span> {mapGuideData.kits[1] || 'No suggestions'}</li>
-                        <li><span className="font-bold">Headset:</span> {mapGuideData.kits[2] || 'No suggestions'}</li>
-                        <li><span className="font-bold">Body Armor:</span> {mapGuideData.kits[3] || 'No suggestions'}</li>
-                        <li><span className="font-bold">Backpack:</span> {mapGuideData.kits[4] || 'No suggestions'}</li>
-                        <li><span className="font-bold">Keys to bring:</span> {mapGuideData.kits[5] || 'No suggestions'}</li>
+                        {(mapGuideData.kits || []).map((kit, i) =>
+                          kit && typeof kit === 'object' && 'label' in kit && 'value' in kit
+                            ? <li key={i}><span className="font-bold">{kit.label}:</span> {kit.value || 'No suggestions'}</li>
+                            : <li key={i}>{kit || 'No suggestions'}</li>
+                        )}
                       </ul>
                     </div>
                     {/* Tips Section */}
@@ -836,37 +835,43 @@ function GunBuilds({ isAdmin, adminUsername, onAdminLogout }) {
           <div className="relative w-full max-w-md bg-card-bg rounded-lg p-8" onClick={e => e.stopPropagation()}>
             <h2 className="text-2xl font-gaming mb-4">Edit Kits</h2>
             <div className="space-y-3">
-              {kitsFields.map((field, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  {(isAdmin || adminUsername) ? (
+              {kitsFields.map((field, idx) => {
+                if (!field || typeof field !== 'object' || !('label' in field) || !('value' in field)) {
+                  console.error('Invalid field in kitsFields:', field);
+                  return null;
+                }
+                return (
+                  <div key={idx} className="flex items-center gap-2">
+                    {(isAdmin || adminUsername) ? (
+                      <input
+                        className="w-1/3 px-2 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white text-sm"
+                        value={field.label}
+                        onChange={e => setKitsFields(f => f.map((fld, i) => i === idx ? { ...fld, label: e.target.value } : fld))}
+                        onBlur={e => saveKitsFields(kitsFields.map((fld, i) => i === idx ? { ...fld, label: e.target.value } : fld))}
+                        placeholder="Label"
+                        title="Field label"
+                      />
+                    ) : (
+                      <label className="block mb-1 text-sm w-1/3">{field.label}</label>
+                    )}
                     <input
-                      className="w-1/3 px-2 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white text-sm"
-                      value={field.label}
-                      onChange={e => setKitsFields(f => f.map((fld, i) => i === idx ? { ...fld, label: e.target.value } : fld))}
-                      onBlur={e => saveKitsFields(kitsFields.map((fld, i) => i === idx ? { ...fld, label: e.target.value } : fld))}
-                      placeholder="Label"
-                      title="Field label"
+                      className="w-2/3 px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white"
+                      value={field.value}
+                      onChange={e => setKitsFields(f => f.map((fld, i) => i === idx ? { ...fld, value: e.target.value } : fld))}
+                      onBlur={e => saveKitsFields(kitsFields.map((fld, i) => i === idx ? { ...fld, value: e.target.value } : fld))}
+                      placeholder={field.label}
                     />
-                  ) : (
-                    <label className="block mb-1 text-sm w-1/3">{field.label}</label>
-                  )}
-                  <input
-                    className="w-2/3 px-3 py-2 bg-gray-800 border border-neon-blue rounded-lg text-white"
-                    value={field.value}
-                    onChange={e => setKitsFields(f => f.map((fld, i) => i === idx ? { ...fld, value: e.target.value } : fld))}
-                    onBlur={e => saveKitsFields(kitsFields.map((fld, i) => i === idx ? { ...fld, value: e.target.value } : fld))}
-                    placeholder={field.label}
-                  />
-                  {(isAdmin || adminUsername) && kitsFields.length > 1 && (
-                    <button
-                      className="w-7 h-7 flex items-center justify-center bg-red-600 text-white rounded text-base p-0"
-                      onClick={() => setKitsFields(f => f.filter((_, i) => i !== idx))}
-                      title="Remove field"
-                      type="button"
-                    >🗑️</button>
-                  )}
-                </div>
-              ))}
+                    {(isAdmin || adminUsername) && kitsFields.length > 1 && (
+                      <button
+                        className="w-7 h-7 flex items-center justify-center bg-red-600 text-white rounded text-base p-0"
+                        onClick={() => setKitsFields(f => f.filter((_, i) => i !== idx))}
+                        title="Remove field"
+                        type="button"
+                      >🗑️</button>
+                    )}
+                  </div>
+                );
+              })}
               {(isAdmin || adminUsername) && (
                 <button
                   className="px-4 py-2 bg-neon-blue text-dark-bg rounded mt-2"
